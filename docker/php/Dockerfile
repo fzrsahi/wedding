@@ -1,8 +1,6 @@
 FROM php:7.3-fpm
 
-RUN apt-get update && apt-get install -y gnupg2 \
-    && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 64E6B4D7B6A4D4B8 \
-    && apt-get update --fix-missing
+RUN apt-get update --fix-missing 
 RUN apt-get install -y zip unzip libonig-dev libicu-dev
 RUN apt-get install -y libzip-dev libpq-dev
 RUN apt-get install -y build-essential libssl-dev zlib1g-dev
