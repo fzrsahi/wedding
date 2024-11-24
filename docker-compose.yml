@@ -5,12 +5,9 @@ services:
       context: .
       dockerfile: docker/php/Dockerfile
     container_name: wedding-app
-    ports:
-      - 9001:9001
     networks:
       - wedding
       - db_postgres
-      - shared-network # Tambahkan jaringan shared-network
 
   nginx:
     build:
@@ -18,10 +15,9 @@ services:
       dockerfile: docker/nginx/Dockerfile
     container_name: wedding-nginx
     ports:
-      - 8082:80
+      - 3007:80
     networks:
       - wedding
-      - shared-network # Tambahkan jaringan shared-network
     depends_on:
       - app
 
