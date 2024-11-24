@@ -4,9 +4,9 @@ services:
     build:
       context: .
       dockerfile: docker/php/Dockerfile
-    container_name: undangan-app
+    container_name: wedding-app
     networks:
-      - undangan
+      - wedding
       - db_postgres
       - shared-network # Tambahkan jaringan shared-network
 
@@ -14,17 +14,17 @@ services:
     build:
       context: .
       dockerfile: docker/nginx/Dockerfile
-    container_name: undangan-nginx
+    container_name: wedding-nginx
     ports:
       - 8082:80
     networks:
-      - undangan
+      - wedding
       - shared-network # Tambahkan jaringan shared-network
     depends_on:
       - app
 
 networks:
-  undangan:
+  wedding:
     driver: bridge
   db_postgres:
     external: true
