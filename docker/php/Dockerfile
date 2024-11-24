@@ -14,11 +14,14 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 COPY . /var/www
 WORKDIR /var/www
 
-RUN chmod 777 -R /var/www/cache
+RUN mkdir -p /var/www/storage /var/www/bootstrap/cache \
+    && chmod -R 777 /var/www/storage /var/www/bootstrap/cache
+
 RUN composer install --prefer-dist --no-dev --optimize-autoloader --no-interaction
 
-RUN php saya key
-RUN php saya view:cache
+RUN php artisan key:generate
+RUN php artisan view:cache
 
-EXPOSE 9000
+EXPOSE 9001
+
 CMD ["php-fpm"]
