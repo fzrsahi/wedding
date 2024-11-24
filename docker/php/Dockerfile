@@ -22,6 +22,4 @@ RUN composer install --prefer-dist --no-dev --optimize-autoloader --no-interacti
 RUN php artisan key:generate
 RUN php artisan view:cache
 
-EXPOSE 9001
-
 CMD ["php-fpm"]
