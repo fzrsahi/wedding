@@ -909,7 +909,7 @@ module.exports = function transformData(data, headers, fns) {
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 "use strict";
-/* provided dependency */ var process = __webpack_require__(/*! process/browser */ "./node_modules/process/browser.js");
+/* provided dependency */ var process = __webpack_require__(/*! process/browser.js */ "./node_modules/process/browser.js");
 
 
 var utils = __webpack_require__(/*! ./utils */ "./node_modules/axios/lib/utils.js");
@@ -1809,6 +1809,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _addon_Navbar_vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./addon/Navbar.vue */ "./resources/js/views/addon/Navbar.vue");
 /* harmony import */ var _addon_MusicBox_vue__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./addon/MusicBox.vue */ "./resources/js/views/addon/MusicBox.vue");
 /* harmony import */ var _addon_Protocol_vue__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./addon/Protocol.vue */ "./resources/js/views/addon/Protocol.vue");
+/* harmony import */ var vue_infinite_loading__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! vue-infinite-loading */ "./node_modules/vue-infinite-loading/dist/vue-infinite-loading.js");
+/* harmony import */ var vue_infinite_loading__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(vue_infinite_loading__WEBPACK_IMPORTED_MODULE_10__);
+function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
+function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
 //
 //
 //
@@ -1893,6 +1901,145 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
 
 
 
@@ -1914,43 +2061,54 @@ __webpack_require__.r(__webpack_exports__);
     Comment: _components_Comment_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
     Audio: _addon_Audio_vue__WEBPACK_IMPORTED_MODULE_6__["default"],
     Navbar: _addon_Navbar_vue__WEBPACK_IMPORTED_MODULE_7__["default"],
-    MusicBox: _addon_MusicBox_vue__WEBPACK_IMPORTED_MODULE_8__["default"]
+    MusicBox: _addon_MusicBox_vue__WEBPACK_IMPORTED_MODULE_8__["default"],
+    InfiniteLoading: (vue_infinite_loading__WEBPACK_IMPORTED_MODULE_10___default())
   },
   data: function data() {
     return {
       comments: [],
-      limit: 10,
+      page: 1,
       busy: false
     };
   },
-  created: function created() {
-    // this.fetchComments();
-    this.loadMore();
+  mounted: function mounted() {
+    var _this = this;
+    var prevScrollpos = window.pageYOffset;
+    window.onscroll = function () {
+      var currentScrollPos = window.pageYOffset;
+      if (prevScrollpos > currentScrollPos) {
+        document.getElementById("navbar").style.bottom = "0";
+      } else {
+        document.getElementById("navbar").style.bottom = "-78px";
+      }
+      prevScrollpos = currentScrollPos;
+      var bottomOfWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight;
+      if (bottomOfWindow) {
+        _this.loadMore();
+      }
+    };
   },
   methods: {
-    fetchComments: function fetchComments() {
-      var _this = this;
-
-      axios.get('comments').then(function (_ref) {
+    loadMore: function loadMore($state) {
+      var _this2 = this;
+      this.busy = true;
+      axios.get("comments?page=" + this.page).then(function (_ref) {
         var data = _ref.data;
-        _this.comments = data;
+        var listComments = data.data;
+        if (listComments.length) {
+          var _this2$comments;
+          _this2.page += 1;
+          (_this2$comments = _this2.comments).push.apply(_this2$comments, _toConsumableArray(listComments));
+          $state.loaded();
+        } else {
+          $state.complete();
+        }
+      })["catch"](function (err) {
+        return console.log(err);
       });
     },
     addComment: function addComment(comment) {
       this.comments.unshift(comment);
-    },
-    loadMore: function loadMore() {
-      var _this2 = this;
-
-      console.log("Adding 10 more data results");
-      this.busy = true;
-      axios.get('comments').then(function (_ref2) {
-        var data = _ref2.data;
-        _this2.comments = data.data;
-        var append = response.data.slice(_this2.comments.length, _this2.comments.length + _this2.limit);
-        _this2.comments = _this2.comments.concat(append);
-        _this2.busy = false;
-      });
     }
   }
 });
@@ -1976,6 +2134,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({});
 
 /***/ }),
@@ -2007,6 +2166,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -2062,6 +2222,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({});
 
 /***/ }),
@@ -2079,66 +2240,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({});
 
 /***/ }),
@@ -2259,6 +2361,277 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({});
 
 /***/ }),
@@ -2318,6 +2691,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: ['comment'],
   filters: {
@@ -2368,6 +2742,40 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({});
 
 /***/ }),
@@ -2437,6 +2845,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -2451,14 +2860,12 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     storeComment: function storeComment() {
       var _this = this;
-
       this.isPressed = true;
       axios.post('comment/store', this.guest).then(function (_ref) {
         var data = _ref.data;
         _this.isPressed = false;
         _this.guest.name = '';
         _this.guest.comment = '';
-
         _this.$emit('completed', data);
       })["catch"](function (err) {
         return console.log(err);
@@ -2466,13 +2873,11 @@ __webpack_require__.r(__webpack_exports__);
     },
     setPresence: function setPresence() {
       var valuePresence = this.guest.presence;
-
       if (valuePresence == 0) {
         this.isHidden = true;
       } else {
         this.isHidden = false;
       }
-
       console.log(this.guest.presence);
     }
   }
@@ -2555,6 +2960,78 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({});
 
 /***/ }),
@@ -2616,6 +3093,103 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({});
 
 /***/ }),
@@ -2636,11 +3210,13 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
- // Register Vue Components
+
+
+// Register Vue Components
 // Vue.component('comment', require('./components/Comment.vue').default);
 // Vue.component('guestbook', require('./components/FormGuestBook.vue').default);
-// Initialize Vue
 
+// Initialize Vue
 var app = new Vue({
   el: '#root',
   router: _route__WEBPACK_IMPORTED_MODULE_2__["default"],
@@ -2674,19 +3250,15 @@ vue__WEBPACK_IMPORTED_MODULE_1__["default"].use(vue_router__WEBPACK_IMPORTED_MOD
 window.axios = (axios__WEBPACK_IMPORTED_MODULE_0___default());
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 var prevScrollpos = window.pageYOffset;
-
 window.onscroll = function () {
   var currentScrollPos = window.pageYOffset;
-
   if (prevScrollpos > currentScrollPos) {
     document.getElementById("navbar").style.bottom = "0";
   } else {
     document.getElementById("navbar").style.bottom = "-78px";
   }
-
   prevScrollpos = currentScrollPos;
 };
-
 var modal = UIkit.modal("#my_id");
 modal.show();
 window.document.getElementById('play-sound').addEventListener('click', function (event) {
@@ -2710,7 +3282,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var routes = [{
   path: '/',
-  component: __webpack_require__(/*! ./views/Home.vue */ "./resources/js/views/Home.vue")["default"]
+  component: (__webpack_require__(/*! ./views/Home.vue */ "./resources/js/views/Home.vue")["default"])
 }];
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (new vue_router__WEBPACK_IMPORTED_MODULE_0__["default"]({
   mode: 'history',
@@ -2736,7 +3308,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.text-thelast[data-v-63cd6604] {\r\n    color: rgba(206, 180, 108, 0.75);\n}\n.divider-thelast[data-v-63cd6604] {\r\n    margin: 0 auto;\r\n    width: 15%;\r\n    margin-top: 3px;\r\n    border: 0;\r\n    height: 1px;\r\n    background-image: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(206, 180, 108, 0.75), rgba(255, 255, 255, 0));\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.text-thelast[data-v-63cd6604] {\r\n    color: rgba(206, 180, 108, 0.75);\n}\n.divider-thelast[data-v-63cd6604] {\r\n    margin: 0 auto;\r\n    width: 15%;\r\n    margin-top: 3px;\r\n    border: 0;\r\n    height: 1px;\r\n    background-image: linear-gradient(\r\n        to right,\r\n        rgba(255, 255, 255, 0),\r\n        rgba(206, 180, 108, 0.75),\r\n        rgba(255, 255, 255, 0)\r\n    );\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -2760,7 +3332,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.music-box[data-v-3e7718b4] {\r\n        position: fixed;\r\n        width: 37px;\r\n        height: 160px;\r\n        z-index: 9;\r\n        bottom: 81px;\r\n        right: 10px;\n}\n.music-box .music-holder[data-v-3e7718b4] {\r\n        width: 100%;\r\n        height: 100%;\r\n        position: absolute;\r\n        right: 0;\r\n        bottom: -30px;\r\n        visibility: hidden;\r\n        opacity: 0;\r\n        transition: all 0.5s ease-out;\n}\n.music-box button[data-v-3e7718b4] {\r\n        background: #FBFBFB;\r\n        box-shadow: 0 1px 3px 0 rgba(0,0,0,.1), 0 1px 2px 0 rgba(0,0,0,.06);\r\n        width: 37px;\r\n        height: 37px;\r\n        font-size: 18px;\r\n        font-size: 1rem;\r\n        outline: 0;\r\n        padding: 0;\r\n        margin: 0;\r\n        position: absolute;\r\n        right: 0;\r\n        bottom: 20px;\r\n        border-radius: 50%;\r\n        border: 0px;\n}\n.music-box button i[data-v-3e7718b4] {\r\n        font-size: 20px;\n}\n.music-box .toggle-music-box[data-v-3e7718b4] {\r\n        top: -50px;\r\n        visibility: visible;\r\n        opacity: 1;\n}\n.music[data-v-3e7718b4] {\r\n        padding: 0;\r\n        background: none !important;\r\n        position: relative;\r\n        top: 103px;\r\n        right: 180px;\n}\n.music[data-v-3e7718b4]:focus {\r\n        outline: none;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.music-box[data-v-3e7718b4] {\n        position: fixed;\n        width: 37px;\n        height: 160px;\n        z-index: 9;\n        bottom: 81px;\n        right: 10px;\n}\n.music-box .music-holder[data-v-3e7718b4] {\n        width: 100%;\n        height: 100%;\n        position: absolute;\n        right: 0;\n        bottom: -30px;\n        visibility: hidden;\n        opacity: 0;\n        transition: all 0.5s ease-out;\n}\n.music-box button[data-v-3e7718b4] {\n        background: #FBFBFB;\n        box-shadow: 0 1px 3px 0 rgba(0,0,0,.1), 0 1px 2px 0 rgba(0,0,0,.06);\n        width: 37px;\n        height: 37px;\n        font-size: 18px;\n        font-size: 1rem;\n        outline: 0;\n        padding: 0;\n        margin: 0;\n        position: absolute;\n        right: 0;\n        bottom: 20px;\n        border-radius: 50%;\n        border: 0px;\n}\n.music-box button i[data-v-3e7718b4] {\n        font-size: 20px;\n}\n.music-box .toggle-music-box[data-v-3e7718b4] {\n        top: -50px;\n        visibility: visible;\n        opacity: 1;\n}\n.music[data-v-3e7718b4] {\n        padding: 0;\n        background: none !important;\n        position: relative;\n        top: 103px;\n        right: 180px;\n}\n.music[data-v-3e7718b4]:focus {\n        outline: none;\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -2784,7 +3356,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.card[data-v-5788d634] {\r\n    border-color: #d6ba8d;\r\n    border-radius: 0.9rem;\r\n    border-width: 2px;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    max-width: 100%;\r\n    overflow: hidden;\r\n    position: relative;\r\n    height: auto;\n}\n.tw-text-grey-darker[data-v-5788d634] {\r\n    --tw-text-opacity: 1;\r\n    color: rgba(96,111,123,var(--tw-text-opacity));\n}\n.carousel-cell[data-v-5788d634] {\r\n  margin-right: 10px;\r\n  height: 100px;\n}\r\n\r\n\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.card[data-v-5788d634] {\n    border-color: #d6ba8d;\n    border-radius: 0.9rem;\n    border-width: 2px;\n    margin-left: auto;\n    margin-right: auto;\n    max-width: 100%;\n    overflow: hidden;\n    position: relative;\n    height: auto;\n}\n.tw-text-grey-darker[data-v-5788d634] {\n    --tw-text-opacity: 1;\n    color: rgba(96, 111, 123, var(--tw-text-opacity));\n}\n.carousel-cell[data-v-5788d634] {\n    margin-right: 10px;\n    height: 100px;\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -2808,7 +3380,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.white-space[data-v-3b0b9885] {\r\n    white-space: pre-line;\n}\n.comment[data-v-3b0b9885] {\r\n    color: rgb(51, 51, 51);\r\n    font-size: 14px;\r\n    font-weight: 400 !important;\r\n    line-height: 24px;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.white-space[data-v-3b0b9885] {\n    white-space: pre-line;\n}\n.comment[data-v-3b0b9885] {\n    color: rgb(51, 51, 51);\n    font-size: 14px;\n    font-weight: 400 !important;\n    line-height: 24px;\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -2832,7 +3404,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.m-name[data-v-4fc729d8] {\r\n    font-family: Greenlight Script;\n}\n.pl[data-v-4fc729d8] {\r\n    width: 200px;\r\n    height: 200px;\r\n    padding: 1rem;\r\n    background-size: contain;\r\n    background-position: center;\r\n    background-repeat: no-repeat;\r\n    mask-image: url('/mywedding/public/assets/images/mask.png');\r\n    -webkit-mask-image:  url('/mywedding/public/assets/images/mask.png');\r\n    mask-size: 200px;\r\n    -webkit-mask-size: 200px;\r\n    mask-repeat: no-repeat;\r\n    -webkit-mask-repeat: no-repeat;\r\n    mask-position: center;\r\n    -webkit-mask-position: center;\r\n    background-image: url('/mywedding/public/assets/images/cpp-test.jpg');\n}\n.pw[data-v-4fc729d8] {\r\n    width: 200px;\r\n    height: 200px;\r\n    padding: 1rem;\r\n    background-size: contain;\r\n    background-position: center;\r\n    background-repeat: no-repeat;\r\n    mask-image: url('/mywedding/public/assets/images/mask.png');\r\n    -webkit-mask-image:  url('/mywedding/public/assets/images/mask.png');\r\n    mask-size: 200px;\r\n    -webkit-mask-size: 200px;\r\n    mask-repeat: no-repeat;\r\n    -webkit-mask-repeat: no-repeat;\r\n    mask-position: center;\r\n    -webkit-mask-position: center;\r\n    background-image: url('/mywedding/public/assets/images/cpw-test.jpg');\n}\n.divider[data-v-4fc729d8] {\r\n    margin: 0 auto;\r\n    width: 35%;\r\n    margin-bottom: 20px;\r\n    margin-top: 10px;\r\n    border: 0;\r\n    height: 1px;\r\n    background-image: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(206, 180, 108, 0.75), rgba(255, 255, 255, 0));\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.m-name[data-v-4fc729d8] {\n    font-family: Greenlight Script;\n}\n.pl[data-v-4fc729d8] {\n    width: 200px;\n    height: 200px;\n    padding: 1rem;\n    background-size: contain;\n    background-position: center;\n    background-repeat: no-repeat;\n    mask-image: url(\"/mywedding/public/assets/images/mask.png\");\n    -webkit-mask-image: url(\"/mywedding/public/assets/images/mask.png\");\n    mask-size: 200px;\n    -webkit-mask-size: 200px;\n    mask-repeat: no-repeat;\n    -webkit-mask-repeat: no-repeat;\n    mask-position: center;\n    -webkit-mask-position: center;\n    background-image: url(\"/mywedding/public/assets/images/cpp-test.jpg\");\n}\n.pw[data-v-4fc729d8] {\n    width: 200px;\n    height: 200px;\n    padding: 1rem;\n    background-size: contain;\n    background-position: center;\n    background-repeat: no-repeat;\n    mask-image: url(\"/mywedding/public/assets/images/mask.png\");\n    -webkit-mask-image: url(\"/mywedding/public/assets/images/mask.png\");\n    mask-size: 200px;\n    -webkit-mask-size: 200px;\n    mask-repeat: no-repeat;\n    -webkit-mask-repeat: no-repeat;\n    mask-position: center;\n    -webkit-mask-position: center;\n    background-image: url(\"/mywedding/public/assets/images/cpw-test.jpg\");\n}\n.divider[data-v-4fc729d8] {\n    margin: 0 auto;\n    width: 35%;\n    margin-bottom: 20px;\n    margin-top: 10px;\n    border: 0;\n    height: 1px;\n    background-image: linear-gradient(\n        to right,\n        rgba(255, 255, 255, 0),\n        rgba(206, 180, 108, 0.75),\n        rgba(255, 255, 255, 0)\n    );\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -3548,6 +4120,21 @@ module.exports = function (list, options) {
     lastIdentifiers = newLastIdentifiers;
   };
 };
+
+/***/ }),
+
+/***/ "./node_modules/vue-infinite-loading/dist/vue-infinite-loading.js":
+/*!************************************************************************!*\
+  !*** ./node_modules/vue-infinite-loading/dist/vue-infinite-loading.js ***!
+  \************************************************************************/
+/***/ (function(module) {
+
+/*!
+ * vue-infinite-loading v2.4.5
+ * (c) 2016-2020 PeachScript
+ * MIT License
+ */
+!function(t,e){ true?module.exports=e():0}(this,(function(){return function(t){var e={};function n(i){if(e[i])return e[i].exports;var a=e[i]={i:i,l:!1,exports:{}};return t[i].call(a.exports,a,a.exports,n),a.l=!0,a.exports}return n.m=t,n.c=e,n.d=function(t,e,i){n.o(t,e)||Object.defineProperty(t,e,{enumerable:!0,get:i})},n.r=function(t){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(t,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(t,"__esModule",{value:!0})},n.t=function(t,e){if(1&e&&(t=n(t)),8&e)return t;if(4&e&&"object"==typeof t&&t&&t.__esModule)return t;var i=Object.create(null);if(n.r(i),Object.defineProperty(i,"default",{enumerable:!0,value:t}),2&e&&"string"!=typeof t)for(var a in t)n.d(i,a,function(e){return t[e]}.bind(null,a));return i},n.n=function(t){var e=t&&t.__esModule?function(){return t.default}:function(){return t};return n.d(e,"a",e),e},n.o=function(t,e){return Object.prototype.hasOwnProperty.call(t,e)},n.p="",n(n.s=9)}([function(t,e,n){var i=n(6);"string"==typeof i&&(i=[[t.i,i,""]]),i.locals&&(t.exports=i.locals);(0,n(3).default)("6223ff68",i,!0,{})},function(t,e,n){var i=n(8);"string"==typeof i&&(i=[[t.i,i,""]]),i.locals&&(t.exports=i.locals);(0,n(3).default)("27f0e51f",i,!0,{})},function(t,e){t.exports=function(t){var e=[];return e.toString=function(){return this.map((function(e){var n=function(t,e){var n=t[1]||"",i=t[3];if(!i)return n;if(e&&"function"==typeof btoa){var a=(o=i,"/*# sourceMappingURL=data:application/json;charset=utf-8;base64,"+btoa(unescape(encodeURIComponent(JSON.stringify(o))))+" */"),r=i.sources.map((function(t){return"/*# sourceURL="+i.sourceRoot+t+" */"}));return[n].concat(r).concat([a]).join("\n")}var o;return[n].join("\n")}(e,t);return e[2]?"@media "+e[2]+"{"+n+"}":n})).join("")},e.i=function(t,n){"string"==typeof t&&(t=[[null,t,""]]);for(var i={},a=0;a<this.length;a++){var r=this[a][0];"number"==typeof r&&(i[r]=!0)}for(a=0;a<t.length;a++){var o=t[a];"number"==typeof o[0]&&i[o[0]]||(n&&!o[2]?o[2]=n:n&&(o[2]="("+o[2]+") and ("+n+")"),e.push(o))}},e}},function(t,e,n){"use strict";function i(t,e){for(var n=[],i={},a=0;a<e.length;a++){var r=e[a],o=r[0],s={id:t+":"+a,css:r[1],media:r[2],sourceMap:r[3]};i[o]?i[o].parts.push(s):n.push(i[o]={id:o,parts:[s]})}return n}n.r(e),n.d(e,"default",(function(){return f}));var a="undefined"!=typeof document;if("undefined"!=typeof DEBUG&&DEBUG&&!a)throw new Error("vue-style-loader cannot be used in a non-browser environment. Use { target: 'node' } in your Webpack config to indicate a server-rendering environment.");var r={},o=a&&(document.head||document.getElementsByTagName("head")[0]),s=null,l=0,d=!1,c=function(){},u=null,p="undefined"!=typeof navigator&&/msie [6-9]\b/.test(navigator.userAgent.toLowerCase());function f(t,e,n,a){d=n,u=a||{};var o=i(t,e);return b(o),function(e){for(var n=[],a=0;a<o.length;a++){var s=o[a];(l=r[s.id]).refs--,n.push(l)}e?b(o=i(t,e)):o=[];for(a=0;a<n.length;a++){var l;if(0===(l=n[a]).refs){for(var d=0;d<l.parts.length;d++)l.parts[d]();delete r[l.id]}}}}function b(t){for(var e=0;e<t.length;e++){var n=t[e],i=r[n.id];if(i){i.refs++;for(var a=0;a<i.parts.length;a++)i.parts[a](n.parts[a]);for(;a<n.parts.length;a++)i.parts.push(m(n.parts[a]));i.parts.length>n.parts.length&&(i.parts.length=n.parts.length)}else{var o=[];for(a=0;a<n.parts.length;a++)o.push(m(n.parts[a]));r[n.id]={id:n.id,refs:1,parts:o}}}}function h(){var t=document.createElement("style");return t.type="text/css",o.appendChild(t),t}function m(t){var e,n,i=document.querySelector('style[data-vue-ssr-id~="'+t.id+'"]');if(i){if(d)return c;i.parentNode.removeChild(i)}if(p){var a=l++;i=s||(s=h()),e=w.bind(null,i,a,!1),n=w.bind(null,i,a,!0)}else i=h(),e=y.bind(null,i),n=function(){i.parentNode.removeChild(i)};return e(t),function(i){if(i){if(i.css===t.css&&i.media===t.media&&i.sourceMap===t.sourceMap)return;e(t=i)}else n()}}var g,v=(g=[],function(t,e){return g[t]=e,g.filter(Boolean).join("\n")});function w(t,e,n,i){var a=n?"":i.css;if(t.styleSheet)t.styleSheet.cssText=v(e,a);else{var r=document.createTextNode(a),o=t.childNodes;o[e]&&t.removeChild(o[e]),o.length?t.insertBefore(r,o[e]):t.appendChild(r)}}function y(t,e){var n=e.css,i=e.media,a=e.sourceMap;if(i&&t.setAttribute("media",i),u.ssrId&&t.setAttribute("data-vue-ssr-id",e.id),a&&(n+="\n/*# sourceURL="+a.sources[0]+" */",n+="\n/*# sourceMappingURL=data:application/json;base64,"+btoa(unescape(encodeURIComponent(JSON.stringify(a))))+" */"),t.styleSheet)t.styleSheet.cssText=n;else{for(;t.firstChild;)t.removeChild(t.firstChild);t.appendChild(document.createTextNode(n))}}},function(t,e){function n(e){return"function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?t.exports=n=function(t){return typeof t}:t.exports=n=function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t},n(e)}t.exports=n},function(t,e,n){"use strict";n.r(e);var i=n(0),a=n.n(i);for(var r in i)"default"!==r&&function(t){n.d(e,t,(function(){return i[t]}))}(r);e.default=a.a},function(t,e,n){(t.exports=n(2)(!1)).push([t.i,'.loading-wave-dots[data-v-46b20d22]{position:relative}.loading-wave-dots[data-v-46b20d22] .wave-item{position:absolute;top:50%;left:50%;display:inline-block;margin-top:-4px;width:8px;height:8px;border-radius:50%;-webkit-animation:loading-wave-dots-data-v-46b20d22 linear 2.8s infinite;animation:loading-wave-dots-data-v-46b20d22 linear 2.8s infinite}.loading-wave-dots[data-v-46b20d22] .wave-item:first-child{margin-left:-36px}.loading-wave-dots[data-v-46b20d22] .wave-item:nth-child(2){margin-left:-20px;-webkit-animation-delay:.14s;animation-delay:.14s}.loading-wave-dots[data-v-46b20d22] .wave-item:nth-child(3){margin-left:-4px;-webkit-animation-delay:.28s;animation-delay:.28s}.loading-wave-dots[data-v-46b20d22] .wave-item:nth-child(4){margin-left:12px;-webkit-animation-delay:.42s;animation-delay:.42s}.loading-wave-dots[data-v-46b20d22] .wave-item:last-child{margin-left:28px;-webkit-animation-delay:.56s;animation-delay:.56s}@-webkit-keyframes loading-wave-dots-data-v-46b20d22{0%{-webkit-transform:translateY(0);transform:translateY(0);background:#bbb}10%{-webkit-transform:translateY(-6px);transform:translateY(-6px);background:#999}20%{-webkit-transform:translateY(0);transform:translateY(0);background:#bbb}to{-webkit-transform:translateY(0);transform:translateY(0);background:#bbb}}@keyframes loading-wave-dots-data-v-46b20d22{0%{-webkit-transform:translateY(0);transform:translateY(0);background:#bbb}10%{-webkit-transform:translateY(-6px);transform:translateY(-6px);background:#999}20%{-webkit-transform:translateY(0);transform:translateY(0);background:#bbb}to{-webkit-transform:translateY(0);transform:translateY(0);background:#bbb}}.loading-circles[data-v-46b20d22] .circle-item{width:5px;height:5px;-webkit-animation:loading-circles-data-v-46b20d22 linear .75s infinite;animation:loading-circles-data-v-46b20d22 linear .75s infinite}.loading-circles[data-v-46b20d22] .circle-item:first-child{margin-top:-14.5px;margin-left:-2.5px}.loading-circles[data-v-46b20d22] .circle-item:nth-child(2){margin-top:-11.26px;margin-left:6.26px}.loading-circles[data-v-46b20d22] .circle-item:nth-child(3){margin-top:-2.5px;margin-left:9.5px}.loading-circles[data-v-46b20d22] .circle-item:nth-child(4){margin-top:6.26px;margin-left:6.26px}.loading-circles[data-v-46b20d22] .circle-item:nth-child(5){margin-top:9.5px;margin-left:-2.5px}.loading-circles[data-v-46b20d22] .circle-item:nth-child(6){margin-top:6.26px;margin-left:-11.26px}.loading-circles[data-v-46b20d22] .circle-item:nth-child(7){margin-top:-2.5px;margin-left:-14.5px}.loading-circles[data-v-46b20d22] .circle-item:last-child{margin-top:-11.26px;margin-left:-11.26px}@-webkit-keyframes loading-circles-data-v-46b20d22{0%{background:#dfdfdf}90%{background:#505050}to{background:#dfdfdf}}@keyframes loading-circles-data-v-46b20d22{0%{background:#dfdfdf}90%{background:#505050}to{background:#dfdfdf}}.loading-bubbles[data-v-46b20d22] .bubble-item{background:#666;-webkit-animation:loading-bubbles-data-v-46b20d22 linear .75s infinite;animation:loading-bubbles-data-v-46b20d22 linear .75s infinite}.loading-bubbles[data-v-46b20d22] .bubble-item:first-child{margin-top:-12.5px;margin-left:-.5px}.loading-bubbles[data-v-46b20d22] .bubble-item:nth-child(2){margin-top:-9.26px;margin-left:8.26px}.loading-bubbles[data-v-46b20d22] .bubble-item:nth-child(3){margin-top:-.5px;margin-left:11.5px}.loading-bubbles[data-v-46b20d22] .bubble-item:nth-child(4){margin-top:8.26px;margin-left:8.26px}.loading-bubbles[data-v-46b20d22] .bubble-item:nth-child(5){margin-top:11.5px;margin-left:-.5px}.loading-bubbles[data-v-46b20d22] .bubble-item:nth-child(6){margin-top:8.26px;margin-left:-9.26px}.loading-bubbles[data-v-46b20d22] .bubble-item:nth-child(7){margin-top:-.5px;margin-left:-12.5px}.loading-bubbles[data-v-46b20d22] .bubble-item:last-child{margin-top:-9.26px;margin-left:-9.26px}@-webkit-keyframes loading-bubbles-data-v-46b20d22{0%{width:1px;height:1px;box-shadow:0 0 0 3px #666}90%{width:1px;height:1px;box-shadow:0 0 0 0 #666}to{width:1px;height:1px;box-shadow:0 0 0 3px #666}}@keyframes loading-bubbles-data-v-46b20d22{0%{width:1px;height:1px;box-shadow:0 0 0 3px #666}90%{width:1px;height:1px;box-shadow:0 0 0 0 #666}to{width:1px;height:1px;box-shadow:0 0 0 3px #666}}.loading-default[data-v-46b20d22]{position:relative;border:1px solid #999;-webkit-animation:loading-rotating-data-v-46b20d22 ease 1.5s infinite;animation:loading-rotating-data-v-46b20d22 ease 1.5s infinite}.loading-default[data-v-46b20d22]:before{content:"";position:absolute;display:block;top:0;left:50%;margin-top:-3px;margin-left:-3px;width:6px;height:6px;background-color:#999;border-radius:50%}.loading-spiral[data-v-46b20d22]{border:2px solid #777;border-right-color:transparent;-webkit-animation:loading-rotating-data-v-46b20d22 linear .85s infinite;animation:loading-rotating-data-v-46b20d22 linear .85s infinite}@-webkit-keyframes loading-rotating-data-v-46b20d22{0%{-webkit-transform:rotate(0);transform:rotate(0)}to{-webkit-transform:rotate(1turn);transform:rotate(1turn)}}@keyframes loading-rotating-data-v-46b20d22{0%{-webkit-transform:rotate(0);transform:rotate(0)}to{-webkit-transform:rotate(1turn);transform:rotate(1turn)}}.loading-bubbles[data-v-46b20d22],.loading-circles[data-v-46b20d22]{position:relative}.loading-bubbles[data-v-46b20d22] .bubble-item,.loading-circles[data-v-46b20d22] .circle-item{position:absolute;top:50%;left:50%;display:inline-block;border-radius:50%}.loading-bubbles[data-v-46b20d22] .bubble-item:nth-child(2),.loading-circles[data-v-46b20d22] .circle-item:nth-child(2){-webkit-animation-delay:93ms;animation-delay:93ms}.loading-bubbles[data-v-46b20d22] .bubble-item:nth-child(3),.loading-circles[data-v-46b20d22] .circle-item:nth-child(3){-webkit-animation-delay:.186s;animation-delay:.186s}.loading-bubbles[data-v-46b20d22] .bubble-item:nth-child(4),.loading-circles[data-v-46b20d22] .circle-item:nth-child(4){-webkit-animation-delay:.279s;animation-delay:.279s}.loading-bubbles[data-v-46b20d22] .bubble-item:nth-child(5),.loading-circles[data-v-46b20d22] .circle-item:nth-child(5){-webkit-animation-delay:.372s;animation-delay:.372s}.loading-bubbles[data-v-46b20d22] .bubble-item:nth-child(6),.loading-circles[data-v-46b20d22] .circle-item:nth-child(6){-webkit-animation-delay:.465s;animation-delay:.465s}.loading-bubbles[data-v-46b20d22] .bubble-item:nth-child(7),.loading-circles[data-v-46b20d22] .circle-item:nth-child(7){-webkit-animation-delay:.558s;animation-delay:.558s}.loading-bubbles[data-v-46b20d22] .bubble-item:last-child,.loading-circles[data-v-46b20d22] .circle-item:last-child{-webkit-animation-delay:.651s;animation-delay:.651s}',""])},function(t,e,n){"use strict";n.r(e);var i=n(1),a=n.n(i);for(var r in i)"default"!==r&&function(t){n.d(e,t,(function(){return i[t]}))}(r);e.default=a.a},function(t,e,n){(t.exports=n(2)(!1)).push([t.i,".infinite-loading-container[data-v-644ea9c9]{clear:both;text-align:center}.infinite-loading-container[data-v-644ea9c9] [class^=loading-]{display:inline-block;margin:5px 0;width:28px;height:28px;font-size:28px;line-height:28px;border-radius:50%}.btn-try-infinite[data-v-644ea9c9]{margin-top:5px;padding:5px 10px;color:#999;font-size:14px;line-height:1;background:transparent;border:1px solid #ccc;border-radius:3px;outline:none;cursor:pointer}.btn-try-infinite[data-v-644ea9c9]:not(:active):hover{opacity:.8}",""])},function(t,e,n){"use strict";n.r(e);var i={throttleLimit:50,loopCheckTimeout:1e3,loopCheckMaxCalls:10},a=function(){var t=!1;try{var e=Object.defineProperty({},"passive",{get:function(){return t={passive:!0},!0}});window.addEventListener("testpassive",e,e),window.remove("testpassive",e,e)}catch(t){}return t}(),r={STATE_CHANGER:["emit `loaded` and `complete` event through component instance of `$refs` may cause error, so it will be deprecated soon, please use the `$state` argument instead (`$state` just the special `$event` variable):","\ntemplate:",'<infinite-loading @infinite="infiniteHandler"></infinite-loading>',"\nscript:\n...\ninfiniteHandler($state) {\n  ajax('https://www.example.com/api/news')\n    .then((res) => {\n      if (res.data.length) {\n        $state.loaded();\n      } else {\n        $state.complete();\n      }\n    });\n}\n...","","more details: https://github.com/PeachScript/vue-infinite-loading/issues/57#issuecomment-324370549"].join("\n"),INFINITE_EVENT:"`:on-infinite` property will be deprecated soon, please use `@infinite` event instead.",IDENTIFIER:"the `reset` event will be deprecated soon, please reset this component by change the `identifier` property."},o={INFINITE_LOOP:["executed the callback function more than ".concat(i.loopCheckMaxCalls," times for a short time, it looks like searched a wrong scroll wrapper that doest not has fixed height or maximum height, please check it. If you want to force to set a element as scroll wrapper ranther than automatic searching, you can do this:"),'\n\x3c!-- add a special attribute for the real scroll wrapper --\x3e\n<div infinite-wrapper>\n  ...\n  \x3c!-- set force-use-infinite-wrapper --\x3e\n  <infinite-loading force-use-infinite-wrapper></infinite-loading>\n</div>\nor\n<div class="infinite-wrapper">\n  ...\n  \x3c!-- set force-use-infinite-wrapper as css selector of the real scroll wrapper --\x3e\n  <infinite-loading force-use-infinite-wrapper=".infinite-wrapper"></infinite-loading>\n</div>\n    ',"more details: https://github.com/PeachScript/vue-infinite-loading/issues/55#issuecomment-316934169"].join("\n")},s={READY:0,LOADING:1,COMPLETE:2,ERROR:3},l={color:"#666",fontSize:"14px",padding:"10px 0"},d={mode:"development",props:{spinner:"default",distance:100,forceUseInfiniteWrapper:!1},system:i,slots:{noResults:"No results :(",noMore:"No more data :)",error:"Opps, something went wrong :(",errorBtnText:"Retry",spinner:""},WARNINGS:r,ERRORS:o,STATUS:s},c=n(4),u=n.n(c),p={BUBBLES:{render:function(t){return t("span",{attrs:{class:"loading-bubbles"}},Array.apply(Array,Array(8)).map((function(){return t("span",{attrs:{class:"bubble-item"}})})))}},CIRCLES:{render:function(t){return t("span",{attrs:{class:"loading-circles"}},Array.apply(Array,Array(8)).map((function(){return t("span",{attrs:{class:"circle-item"}})})))}},DEFAULT:{render:function(t){return t("i",{attrs:{class:"loading-default"}})}},SPIRAL:{render:function(t){return t("i",{attrs:{class:"loading-spiral"}})}},WAVEDOTS:{render:function(t){return t("span",{attrs:{class:"loading-wave-dots"}},Array.apply(Array,Array(5)).map((function(){return t("span",{attrs:{class:"wave-item"}})})))}}};function f(t,e,n,i,a,r,o,s){var l,d="function"==typeof t?t.options:t;if(e&&(d.render=e,d.staticRenderFns=n,d._compiled=!0),i&&(d.functional=!0),r&&(d._scopeId="data-v-"+r),o?(l=function(t){(t=t||this.$vnode&&this.$vnode.ssrContext||this.parent&&this.parent.$vnode&&this.parent.$vnode.ssrContext)||"undefined"==typeof __VUE_SSR_CONTEXT__||(t=__VUE_SSR_CONTEXT__),a&&a.call(this,t),t&&t._registeredComponents&&t._registeredComponents.add(o)},d._ssrRegister=l):a&&(l=s?function(){a.call(this,this.$root.$options.shadowRoot)}:a),l)if(d.functional){d._injectStyles=l;var c=d.render;d.render=function(t,e){return l.call(e),c(t,e)}}else{var u=d.beforeCreate;d.beforeCreate=u?[].concat(u,l):[l]}return{exports:t,options:d}}var b=f({name:"Spinner",computed:{spinnerView:function(){return p[(this.$attrs.spinner||"").toUpperCase()]||this.spinnerInConfig},spinnerInConfig:function(){return d.slots.spinner&&"string"==typeof d.slots.spinner?{render:function(){return this._v(d.slots.spinner)}}:"object"===u()(d.slots.spinner)?d.slots.spinner:p[d.props.spinner.toUpperCase()]||p.DEFAULT}}},(function(){var t=this.$createElement;return(this._self._c||t)(this.spinnerView,{tag:"component"})}),[],!1,(function(t){var e=n(5);e.__inject__&&e.__inject__(t)}),"46b20d22",null).exports;function h(t){"production"!==d.mode&&console.warn("[Vue-infinite-loading warn]: ".concat(t))}function m(t){console.error("[Vue-infinite-loading error]: ".concat(t))}var g={timers:[],caches:[],throttle:function(t){var e=this;-1===this.caches.indexOf(t)&&(this.caches.push(t),this.timers.push(setTimeout((function(){t(),e.caches.splice(e.caches.indexOf(t),1),e.timers.shift()}),d.system.throttleLimit)))},reset:function(){this.timers.forEach((function(t){clearTimeout(t)})),this.timers.length=0,this.caches=[]}},v={isChecked:!1,timer:null,times:0,track:function(){var t=this;this.times+=1,clearTimeout(this.timer),this.timer=setTimeout((function(){t.isChecked=!0}),d.system.loopCheckTimeout),this.times>d.system.loopCheckMaxCalls&&(m(o.INFINITE_LOOP),this.isChecked=!0)}},w={key:"_infiniteScrollHeight",getScrollElm:function(t){return t===window?document.documentElement:t},save:function(t){var e=this.getScrollElm(t);e[this.key]=e.scrollHeight},restore:function(t){var e=this.getScrollElm(t);"number"==typeof e[this.key]&&(e.scrollTop=e.scrollHeight-e[this.key]+e.scrollTop),this.remove(e)},remove:function(t){void 0!==t[this.key]&&delete t[this.key]}};function y(t){return t.replace(/[A-Z]/g,(function(t){return"-".concat(t.toLowerCase())}))}function x(t){return t.offsetWidth+t.offsetHeight>0}var k=f({name:"InfiniteLoading",data:function(){return{scrollParent:null,scrollHandler:null,isFirstLoad:!0,status:s.READY,slots:d.slots}},components:{Spinner:b},computed:{isShowSpinner:function(){return this.status===s.LOADING},isShowError:function(){return this.status===s.ERROR},isShowNoResults:function(){return this.status===s.COMPLETE&&this.isFirstLoad},isShowNoMore:function(){return this.status===s.COMPLETE&&!this.isFirstLoad},slotStyles:function(){var t=this,e={};return Object.keys(d.slots).forEach((function(n){var i=y(n);(!t.$slots[i]&&!d.slots[n].render||t.$slots[i]&&!t.$slots[i][0].tag)&&(e[n]=l)})),e}},props:{distance:{type:Number,default:d.props.distance},spinner:String,direction:{type:String,default:"bottom"},forceUseInfiniteWrapper:{type:[Boolean,String],default:d.props.forceUseInfiniteWrapper},identifier:{default:+new Date},onInfinite:Function},watch:{identifier:function(){this.stateChanger.reset()}},mounted:function(){var t=this;this.$watch("forceUseInfiniteWrapper",(function(){t.scrollParent=t.getScrollParent()}),{immediate:!0}),this.scrollHandler=function(e){t.status===s.READY&&(e&&e.constructor===Event&&x(t.$el)?g.throttle(t.attemptLoad):t.attemptLoad())},setTimeout((function(){t.scrollHandler(),t.scrollParent.addEventListener("scroll",t.scrollHandler,a)}),1),this.$on("$InfiniteLoading:loaded",(function(e){t.isFirstLoad=!1,"top"===t.direction&&t.$nextTick((function(){w.restore(t.scrollParent)})),t.status===s.LOADING&&t.$nextTick(t.attemptLoad.bind(null,!0)),e&&e.target===t||h(r.STATE_CHANGER)})),this.$on("$InfiniteLoading:complete",(function(e){t.status=s.COMPLETE,t.$nextTick((function(){t.$forceUpdate()})),t.scrollParent.removeEventListener("scroll",t.scrollHandler,a),e&&e.target===t||h(r.STATE_CHANGER)})),this.$on("$InfiniteLoading:reset",(function(e){t.status=s.READY,t.isFirstLoad=!0,w.remove(t.scrollParent),t.scrollParent.addEventListener("scroll",t.scrollHandler,a),setTimeout((function(){g.reset(),t.scrollHandler()}),1),e&&e.target===t||h(r.IDENTIFIER)})),this.stateChanger={loaded:function(){t.$emit("$InfiniteLoading:loaded",{target:t})},complete:function(){t.$emit("$InfiniteLoading:complete",{target:t})},reset:function(){t.$emit("$InfiniteLoading:reset",{target:t})},error:function(){t.status=s.ERROR,g.reset()}},this.onInfinite&&h(r.INFINITE_EVENT)},deactivated:function(){this.status===s.LOADING&&(this.status=s.READY),this.scrollParent.removeEventListener("scroll",this.scrollHandler,a)},activated:function(){this.scrollParent.addEventListener("scroll",this.scrollHandler,a)},methods:{attemptLoad:function(t){var e=this;this.status!==s.COMPLETE&&x(this.$el)&&this.getCurrentDistance()<=this.distance?(this.status=s.LOADING,"top"===this.direction&&this.$nextTick((function(){w.save(e.scrollParent)})),"function"==typeof this.onInfinite?this.onInfinite.call(null,this.stateChanger):this.$emit("infinite",this.stateChanger),!t||this.forceUseInfiniteWrapper||v.isChecked||v.track()):this.status===s.LOADING&&(this.status=s.READY)},getCurrentDistance:function(){var t;"top"===this.direction?t="number"==typeof this.scrollParent.scrollTop?this.scrollParent.scrollTop:this.scrollParent.pageYOffset:t=this.$el.getBoundingClientRect().top-(this.scrollParent===window?window.innerHeight:this.scrollParent.getBoundingClientRect().bottom);return t},getScrollParent:function(){var t,e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:this.$el;return"string"==typeof this.forceUseInfiniteWrapper&&(t=document.querySelector(this.forceUseInfiniteWrapper)),t||("BODY"===e.tagName?t=window:!this.forceUseInfiniteWrapper&&["scroll","auto"].indexOf(getComputedStyle(e).overflowY)>-1?t=e:(e.hasAttribute("infinite-wrapper")||e.hasAttribute("data-infinite-wrapper"))&&(t=e)),t||this.getScrollParent(e.parentNode)}},destroyed:function(){!this.status!==s.COMPLETE&&(g.reset(),w.remove(this.scrollParent),this.scrollParent.removeEventListener("scroll",this.scrollHandler,a))}},(function(){var t=this,e=t.$createElement,n=t._self._c||e;return n("div",{staticClass:"infinite-loading-container"},[n("div",{directives:[{name:"show",rawName:"v-show",value:t.isShowSpinner,expression:"isShowSpinner"}],staticClass:"infinite-status-prompt",style:t.slotStyles.spinner},[t._t("spinner",[n("spinner",{attrs:{spinner:t.spinner}})])],2),t._v(" "),n("div",{directives:[{name:"show",rawName:"v-show",value:t.isShowNoResults,expression:"isShowNoResults"}],staticClass:"infinite-status-prompt",style:t.slotStyles.noResults},[t._t("no-results",[t.slots.noResults.render?n(t.slots.noResults,{tag:"component"}):[t._v(t._s(t.slots.noResults))]])],2),t._v(" "),n("div",{directives:[{name:"show",rawName:"v-show",value:t.isShowNoMore,expression:"isShowNoMore"}],staticClass:"infinite-status-prompt",style:t.slotStyles.noMore},[t._t("no-more",[t.slots.noMore.render?n(t.slots.noMore,{tag:"component"}):[t._v(t._s(t.slots.noMore))]])],2),t._v(" "),n("div",{directives:[{name:"show",rawName:"v-show",value:t.isShowError,expression:"isShowError"}],staticClass:"infinite-status-prompt",style:t.slotStyles.error},[t._t("error",[t.slots.error.render?n(t.slots.error,{tag:"component",attrs:{trigger:t.attemptLoad}}):[t._v("\n        "+t._s(t.slots.error)+"\n        "),n("br"),t._v(" "),n("button",{staticClass:"btn-try-infinite",domProps:{textContent:t._s(t.slots.errorBtnText)},on:{click:t.attemptLoad}})]],{trigger:t.attemptLoad})],2)])}),[],!1,(function(t){var e=n(7);e.__inject__&&e.__inject__(t)}),"644ea9c9",null).exports;function E(t){d.mode=t.config.productionTip?"development":"production"}Object.defineProperty(k,"install",{configurable:!1,enumerable:!1,value:function(t,e){Object.assign(d.props,e&&e.props),Object.assign(d.slots,e&&e.slots),Object.assign(d.system,e&&e.system),t.component("infinite-loading",k),E(t)}}),"undefined"!=typeof window&&window.Vue&&(window.Vue.component("infinite-loading",k),E(window.Vue));e.default=k}])}));
 
 /***/ }),
 
@@ -4483,8 +5070,8 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Home_vue_vue_type_template_id_63cd6604_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render),
-/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Home_vue_vue_type_template_id_63cd6604_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */   render: () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Home_vue_vue_type_template_id_63cd6604_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Home_vue_vue_type_template_id_63cd6604_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
 /* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Home_vue_vue_type_template_id_63cd6604_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Home.vue?vue&type=template&id=63cd6604&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/views/Home.vue?vue&type=template&id=63cd6604&scoped=true&");
 
@@ -4500,8 +5087,8 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Audio_vue_vue_type_template_id_11efc110___WEBPACK_IMPORTED_MODULE_0__.render),
-/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Audio_vue_vue_type_template_id_11efc110___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */   render: () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Audio_vue_vue_type_template_id_11efc110___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Audio_vue_vue_type_template_id_11efc110___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
 /* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Audio_vue_vue_type_template_id_11efc110___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Audio.vue?vue&type=template&id=11efc110& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/views/addon/Audio.vue?vue&type=template&id=11efc110&");
 
@@ -4517,8 +5104,8 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_MusicBox_vue_vue_type_template_id_3e7718b4_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render),
-/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_MusicBox_vue_vue_type_template_id_3e7718b4_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */   render: () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_MusicBox_vue_vue_type_template_id_3e7718b4_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_MusicBox_vue_vue_type_template_id_3e7718b4_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
 /* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_MusicBox_vue_vue_type_template_id_3e7718b4_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./MusicBox.vue?vue&type=template&id=3e7718b4&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/views/addon/MusicBox.vue?vue&type=template&id=3e7718b4&scoped=true&");
 
@@ -4534,8 +5121,8 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Navbar_vue_vue_type_template_id_f8bdc844___WEBPACK_IMPORTED_MODULE_0__.render),
-/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Navbar_vue_vue_type_template_id_f8bdc844___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */   render: () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Navbar_vue_vue_type_template_id_f8bdc844___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Navbar_vue_vue_type_template_id_f8bdc844___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
 /* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Navbar_vue_vue_type_template_id_f8bdc844___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Navbar.vue?vue&type=template&id=f8bdc844& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/views/addon/Navbar.vue?vue&type=template&id=f8bdc844&");
 
@@ -4551,8 +5138,8 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Protocol_vue_vue_type_template_id_5788d634_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render),
-/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Protocol_vue_vue_type_template_id_5788d634_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */   render: () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Protocol_vue_vue_type_template_id_5788d634_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Protocol_vue_vue_type_template_id_5788d634_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
 /* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Protocol_vue_vue_type_template_id_5788d634_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Protocol.vue?vue&type=template&id=5788d634&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/views/addon/Protocol.vue?vue&type=template&id=5788d634&scoped=true&");
 
@@ -4568,8 +5155,8 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Acara_vue_vue_type_template_id_7b309914___WEBPACK_IMPORTED_MODULE_0__.render),
-/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Acara_vue_vue_type_template_id_7b309914___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */   render: () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Acara_vue_vue_type_template_id_7b309914___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Acara_vue_vue_type_template_id_7b309914___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
 /* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Acara_vue_vue_type_template_id_7b309914___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Acara.vue?vue&type=template&id=7b309914& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/views/components/Acara.vue?vue&type=template&id=7b309914&");
 
@@ -4585,8 +5172,8 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Comment_vue_vue_type_template_id_3b0b9885_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render),
-/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Comment_vue_vue_type_template_id_3b0b9885_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */   render: () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Comment_vue_vue_type_template_id_3b0b9885_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Comment_vue_vue_type_template_id_3b0b9885_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
 /* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Comment_vue_vue_type_template_id_3b0b9885_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Comment.vue?vue&type=template&id=3b0b9885&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/views/components/Comment.vue?vue&type=template&id=3b0b9885&scoped=true&");
 
@@ -4602,8 +5189,8 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Cover_vue_vue_type_template_id_782a0546___WEBPACK_IMPORTED_MODULE_0__.render),
-/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Cover_vue_vue_type_template_id_782a0546___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */   render: () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Cover_vue_vue_type_template_id_782a0546___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Cover_vue_vue_type_template_id_782a0546___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
 /* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Cover_vue_vue_type_template_id_782a0546___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Cover.vue?vue&type=template&id=782a0546& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/views/components/Cover.vue?vue&type=template&id=782a0546&");
 
@@ -4619,8 +5206,8 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_FormGuestBook_vue_vue_type_template_id_787e6dba___WEBPACK_IMPORTED_MODULE_0__.render),
-/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_FormGuestBook_vue_vue_type_template_id_787e6dba___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */   render: () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_FormGuestBook_vue_vue_type_template_id_787e6dba___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_FormGuestBook_vue_vue_type_template_id_787e6dba___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
 /* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_FormGuestBook_vue_vue_type_template_id_787e6dba___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./FormGuestBook.vue?vue&type=template&id=787e6dba& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/views/components/FormGuestBook.vue?vue&type=template&id=787e6dba&");
 
@@ -4636,8 +5223,8 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Gallery_vue_vue_type_template_id_3d8e6ff8___WEBPACK_IMPORTED_MODULE_0__.render),
-/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Gallery_vue_vue_type_template_id_3d8e6ff8___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */   render: () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Gallery_vue_vue_type_template_id_3d8e6ff8___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Gallery_vue_vue_type_template_id_3d8e6ff8___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
 /* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Gallery_vue_vue_type_template_id_3d8e6ff8___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Gallery.vue?vue&type=template&id=3d8e6ff8& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/views/components/Gallery.vue?vue&type=template&id=3d8e6ff8&");
 
@@ -4653,8 +5240,8 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Mempelai_vue_vue_type_template_id_4fc729d8_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render),
-/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Mempelai_vue_vue_type_template_id_4fc729d8_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */   render: () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Mempelai_vue_vue_type_template_id_4fc729d8_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Mempelai_vue_vue_type_template_id_4fc729d8_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
 /* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Mempelai_vue_vue_type_template_id_4fc729d8_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Mempelai.vue?vue&type=template&id=4fc729d8&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/views/components/Mempelai.vue?vue&type=template&id=4fc729d8&scoped=true&");
 
@@ -4670,8 +5257,8 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "render": () => (/* binding */ render),
-/* harmony export */   "staticRenderFns": () => (/* binding */ staticRenderFns)
+/* harmony export */   render: () => (/* binding */ render),
+/* harmony export */   staticRenderFns: () => (/* binding */ staticRenderFns)
 /* harmony export */ });
 var render = function () {
   var _vm = this
@@ -4692,139 +5279,9 @@ var render = function () {
       _vm._v(" "),
       _c("Protocol"),
       _vm._v(" "),
-      _c(
-        "section",
-        {
-          staticClass: "uk-container uk-container-small",
-          attrs: { id: "bukutamu" },
-        },
-        [
-          _c("div", { staticClass: "tw-h-24" }),
-          _vm._v(" "),
-          _c(
-            "section",
-            [
-              _c(
-                "h2",
-                {
-                  staticClass: "tw-text-3xl sm:tw-text-4xl tw-text-center",
-                  staticStyle: { "font-family": "Scarlet" },
-                },
-                [_vm._v(" Buku Tamu ")]
-              ),
-              _vm._v(" "),
-              _c(
-                "button",
-                {
-                  staticClass: "uk-button uk-button-success uk-align-center",
-                  staticStyle: { "margin-bottom": "0px" },
-                  attrs: {
-                    type: "button",
-                    "uk-toggle":
-                      "target: #buku; animation:  uk-animation-slide-left;",
-                    "aria-expanded": "false",
-                  },
-                },
-                [
-                  _c(
-                    "span",
-                    {
-                      staticClass: "uk-icon",
-                      attrs: { "uk-icon": "icon: file-edit;" },
-                    },
-                    [
-                      _c(
-                        "svg",
-                        {
-                          attrs: {
-                            width: "20",
-                            height: "20",
-                            viewBox: "0 0 20 20",
-                            xmlns: "http://www.w3.org/2000/svg",
-                          },
-                        },
-                        [
-                          _c("path", {
-                            attrs: {
-                              fill: "none",
-                              stroke: "#000",
-                              d: "M18.65,1.68 C18.41,1.45 18.109,1.33 17.81,1.33 C17.499,1.33 17.209,1.45 16.98,1.68 L8.92,9.76 L8,12.33 L10.55,11.41 L18.651,3.34 C19.12,2.87 19.12,2.15 18.65,1.68 L18.65,1.68 L18.65,1.68 Z",
-                            },
-                          }),
-                          _c("polyline", {
-                            attrs: {
-                              fill: "none",
-                              stroke: "#000",
-                              points:
-                                "16.5 8.482 16.5 18.5 3.5 18.5 3.5 1.5 14.211 1.5",
-                            },
-                          }),
-                        ]
-                      ),
-                    ]
-                  ),
-                  _vm._v("\n            Isi Buku Tamu"),
-                ]
-              ),
-              _vm._v(" "),
-              _c(
-                "a",
-                {
-                  staticClass: "uk-button uk-button-success uk-align-center",
-                  staticStyle: { width: "171px", "margin-top": "8px" },
-                  attrs: {
-                    href: "#modal-center",
-                    "uk-toggle": "",
-                    "aria-expanded": "false",
-                  },
-                },
-                [_vm._v("Gifts")]
-              ),
-              _vm._v(" "),
-              _vm._m(0),
-              _vm._v(" "),
-              _c("FormGuestBook", { on: { completed: _vm.addComment } }),
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c("div", { staticClass: "tw-h-16" }),
-          _vm._v(" "),
-          _c(
-            "div",
-            {
-              staticClass: "uk-container uk-container-small",
-              attrs: { id: "guest_comment" },
-            },
-            [
-              _c(
-                "div",
-                {
-                  directives: [
-                    {
-                      name: "infinite-scroll",
-                      rawName: "v-infinite-scroll",
-                      value: _vm.loadMore,
-                      expression: "loadMore",
-                    },
-                  ],
-                  attrs: {
-                    "infinite-scroll-disabled": "busy",
-                    "scroll-distance": "limit",
-                  },
-                },
-                _vm._l(_vm.comments, function (comment, index) {
-                  return _c("Comment", {
-                    key: index,
-                    attrs: { comment: comment },
-                  })
-                }),
-                1
-              ),
-            ]
-          ),
-        ]
-      ),
+      _vm._m(0),
+      _vm._v(" "),
+      _vm._m(1),
       _vm._v(" "),
       _c("div", { staticClass: "tw-h-28" }),
       _vm._v(" "),
@@ -4832,9 +5289,13 @@ var render = function () {
         "p",
         {
           staticClass:
-            "tw-text-xs tw-text-extralight tw-text-center tw-italic text-thelast",
+            "\n            tw-text-xs tw-text-extralight tw-text-center tw-italic\n            text-thelast\n        ",
         },
-        [_vm._v("\n        - 'the last good man'\n    ")]
+        [
+          _vm._v(
+            "\n        - 'Wassalamualaikum Warrahmatullahi Wabarakatuh'\n    "
+          ),
+        ]
       ),
       _vm._v(" "),
       _c("hr", { staticClass: "divider-thelast" }),
@@ -4854,68 +5315,251 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c(
-      "div",
+      "section",
       {
-        staticClass: "uk-flex-top uk-modal",
-        attrs: { id: "modal-center", "uk-modal": "" },
+        staticClass: "uk-container uk-container-small",
+        attrs: { id: "bukutamu" },
+      },
+      [
+        _c("div", { staticClass: "tw-h-24" }),
+        _vm._v(" "),
+        _c("section", [
+          _c("div", [
+            _c("section", { attrs: { id: "mempelai" } }, [
+              _c(
+                "div",
+                {
+                  staticClass:
+                    "\n                            sm:tw-max-w-screen-sm\n                            md:tw-max-w-screen-md\n                            lg:tw-max-w-screen-lg\n                            tw-mx-auto tw-px-2.5 tw-py-10\n                        ",
+                },
+                [
+                  _c(
+                    "p",
+                    {
+                      staticClass:
+                        "\n                                tw-text-sm tw-leading-relaxed\n                                lg:tw-font-semibold\n                                tw-font-normal tw-text-justify\n                                md:tw-text-center\n                                lg:tw-hidden\n                                tw-py-4 tw-mb-10\n                            ",
+                    },
+                    [
+                      _vm._v(
+                        "\n                            Dengan memohon rahmat dan ridho-Mu Ya Allah,\n                            Kami bermaksud mengadakan acara pernikahan putra\n                            dan putri kami.\n                        "
+                      ),
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "p",
+                    {
+                      staticClass:
+                        "\n                                tw-hidden\n                                lg:tw-block\n                                tw-leading-relaxed tw-text-sm\n                                lg:tw-font-semibold\n                                tw-font-normal tw-text-justify\n                                md:tw-text-center\n                                tw-py-4 tw-mb-16\n                            ",
+                    },
+                    [
+                      _vm._v(
+                        "\n                            Turut Mengundang :\n                        "
+                      ),
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "lg:tw-w-4/5 lg:tw-mx-auto" }, [
+                    _c(
+                      "div",
+                      {
+                        staticClass:
+                          "\n                                    tw-grid tw-grid-cols-1\n                                    sm:tw-grid-cols-2 sm:tw-gap-4\n                                    md:tw-gap-2\n                                    lg:tw-gap-6\n                                    tw-mx-auto\n                                ",
+                      },
+                      [
+                        _c("div", { staticClass: "tw-text-center" }, [
+                          _c("div", { staticClass: "pl tw-mx-auto" }),
+                          _vm._v(" "),
+                          _c(
+                            "h2",
+                            {
+                              staticClass:
+                                "\n                                            tw-py-3\n                                            m-name\n                                            tw-text-1xl\n                                            sm:tw-text-lg\n                                            md:tw-text-1xl\n                                            lg:tw-text-2xl\n                                        ",
+                            },
+                            [
+                              _vm._v(
+                                "\n                                        Mempelai Wanita :\n                                    "
+                              ),
+                            ]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "p",
+                            {
+                              staticClass:
+                                "\n                                            tw-text-sm\n                                            lg:tw-font-semibold\n                                            tw-font-normal tw-mb-10\n                                        ",
+                            },
+                            [
+                              _vm._v(
+                                "\n                                        Hi. Ekwan Ahmad, S.h "
+                              ),
+                              _c("br"),
+                              _vm._v(
+                                "Kel.\n                                        Mowu'u"
+                              ),
+                              _c("br"),
+                              _vm._v(
+                                "\n                                        Kel. Salilama"
+                              ),
+                              _c("br"),
+                              _vm._v(
+                                "\n                                        Kel. Hulalata\n                                    "
+                              ),
+                            ]
+                          ),
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "tw-text-center" }, [
+                          _c("div", { staticClass: "pw tw-mx-auto" }),
+                          _vm._v(" "),
+                          _c(
+                            "h2",
+                            {
+                              staticClass:
+                                "\n                                            tw-py-3\n                                            m-name\n                                            tw-text-1xl\n                                            sm:tw-text-lg\n                                            md:tw-text-1xl\n                                            lg:tw-text-2xl\n                                        ",
+                            },
+                            [
+                              _vm._v(
+                                "\n                                        Mempelai Pria :\n                                    "
+                              ),
+                            ]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "p",
+                            {
+                              staticClass:
+                                "\n                                            tw-text-sm\n                                            lg:tw-font-semibold\n                                            tw-font-normal tw-mb-12\n                                            sm:tw-mb-20\n                                        ",
+                            },
+                            [
+                              _vm._v(
+                                "\n                                        Sertu Purn. Abd. Manan Doa, (Alm.)\n                                        "
+                              ),
+                              _c("br"),
+                              _vm._v("Kamala Soleman "),
+                              _c("br"),
+                              _vm._v(
+                                "\n                                        Kel. Doa "
+                              ),
+                              _c("br"),
+                              _vm._v(
+                                "\n                                        Kel. Soleman\n                                    "
+                              ),
+                            ]
+                          ),
+                        ]),
+                      ]
+                    ),
+                  ]),
+                  _vm._v(" "),
+                  _c("hr", { staticClass: "divider" }),
+                ]
+              ),
+            ]),
+          ]),
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "tw-h-16" }),
+      ]
+    )
+  },
+  function () {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "section",
+      {
+        staticStyle: {
+          display: "flex",
+          "flex-direction": "column",
+          "align-items": "center",
+          "text-align": "center",
+          padding: "2rem",
+        },
       },
       [
         _c(
-          "div",
+          "h2",
           {
-            staticClass:
-              "uk-modal-dialog uk-modal-body uk-margin-auto-vertical",
-            staticStyle: { color: "#333" },
+            staticStyle: {
+              "font-family": "Scarlet",
+              "font-size": "2rem",
+              "margin-bottom": "1.5rem",
+            },
           },
           [
-            _c("button", {
-              staticClass: "uk-modal-close-default uk-icon uk-close",
-              attrs: { type: "button", "uk-close": "" },
-            }),
-            _vm._v(" "),
-            _c("p", { staticClass: "uk-text-center tw-mb-5" }, [
-              _vm._v("Scan untuk memberikan kebahagian kepada Pengantin."),
-            ]),
-            _vm._v(" "),
+            _vm._v(
+              "\n            Tanpa mengurangi rasa hormat, bagi yang ingin menunjukkan\n            apresiasinya kepada kami, dapat dilakukan melalui\n        "
+            ),
+          ]
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          {
+            staticStyle: {
+              "background-color": "white",
+              "border-radius": "1rem",
+              "box-shadow": "0 4px 6px rgba(0, 0, 0, 0.1)",
+              padding: "1.5rem",
+              "max-width": "400px",
+              "/* Membatasi lebar konten */\n                width": "100%",
+            },
+          },
+          [
             _c(
-              "ul",
-              { staticClass: "uk-accordion", attrs: { "uk-accordion": "" } },
+              "div",
+              {
+                staticStyle: {
+                  display: "flex",
+                  "justify-content": "space-between",
+                  "align-items": "flex-start",
+                },
+              },
               [
-                _c("li", { staticClass: "uk-open" }, [
-                  _c(
-                    "a",
-                    { staticClass: "uk-accordion-title", attrs: { href: "#" } },
-                    [_vm._v("OVO")]
-                  ),
+                _c("div", [
+                  _c("img", {
+                    staticStyle: {
+                      "margin-bottom": "1rem",
+                      width: "80px",
+                      height: "auto",
+                    },
+                    attrs: {
+                      src: "https://upload.wikimedia.org/wikipedia/commons/9/97/Logo_BRI.png",
+                      alt: "Bank BRI Logo",
+                    },
+                  }),
                   _vm._v(" "),
-                  _c("div", { staticClass: "uk-accordion-content" }, [
-                    _c("img", {
-                      staticClass: "tw-mx-auto tw-h-auto",
-                      attrs: {
-                        src: "assets/images/gifts/ovo.jpg",
-                        width: "400",
-                        alt: "OVO QR CODE",
+                  _c("div", { staticStyle: { "margin-top": "1rem" } }, [
+                    _c(
+                      "div",
+                      {
+                        staticClass: "tw-font-extrabold tw-text-black",
+                        staticStyle: {
+                          "font-size": "1.125rem",
+                          "font-weight": "500",
+                        },
                       },
-                    }),
-                  ]),
-                ]),
-                _vm._v(" "),
-                _c("li", { staticClass: "uk-open" }, [
-                  _c(
-                    "a",
-                    { staticClass: "uk-accordion-title", attrs: { href: "#" } },
-                    [_vm._v("BCA")]
-                  ),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "uk-accordion-content" }, [
-                    _c("img", {
-                      staticClass: "tw-mx-auto tw-h-auto",
-                      attrs: {
-                        src: "assets/images/gifts/bca.jpg",
-                        width: "400",
-                        alt: "BCA QR CODE",
+                      [
+                        _vm._v(
+                          "\n                            0027 0110 4460 500\n                        "
+                        ),
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      {
+                        staticClass: "tw-font-extrabold tw-text-black",
+                        staticStyle: { "font-size": "0.875rem", color: "#666" },
                       },
-                    }),
+                      [
+                        _vm._v(
+                          "\n                            Cicit Irmawan\n                        "
+                        ),
+                      ]
+                    ),
                   ]),
                 ]),
               ]
@@ -4941,8 +5585,8 @@ render._withStripped = true
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "render": () => (/* binding */ render),
-/* harmony export */   "staticRenderFns": () => (/* binding */ staticRenderFns)
+/* harmony export */   render: () => (/* binding */ render),
+/* harmony export */   staticRenderFns: () => (/* binding */ staticRenderFns)
 /* harmony export */ });
 var render = function () {
   var _vm = this
@@ -4979,8 +5623,8 @@ render._withStripped = true
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "render": () => (/* binding */ render),
-/* harmony export */   "staticRenderFns": () => (/* binding */ staticRenderFns)
+/* harmony export */   render: () => (/* binding */ render),
+/* harmony export */   staticRenderFns: () => (/* binding */ staticRenderFns)
 /* harmony export */ });
 var render = function () {
   var _vm = this
@@ -5060,8 +5704,8 @@ render._withStripped = true
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "render": () => (/* binding */ render),
-/* harmony export */   "staticRenderFns": () => (/* binding */ staticRenderFns)
+/* harmony export */   render: () => (/* binding */ render),
+/* harmony export */   staticRenderFns: () => (/* binding */ staticRenderFns)
 /* harmony export */ });
 var render = function () {
   var _vm = this
@@ -5198,165 +5842,16 @@ render._withStripped = true
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "render": () => (/* binding */ render),
-/* harmony export */   "staticRenderFns": () => (/* binding */ staticRenderFns)
+/* harmony export */   render: () => (/* binding */ render),
+/* harmony export */   staticRenderFns: () => (/* binding */ staticRenderFns)
 /* harmony export */ });
 var render = function () {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c("div")
 }
-var staticRenderFns = [
-  function () {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      {
-        staticClass:
-          "sm:tw-max-w-screen-sm tw-px-3 sm:tw-px-7 tw-mx-auto protocol",
-      },
-      [
-        _c("div", { staticClass: "tw-flex tw-py-4 tw-px-10" }, [
-          _c("div", { staticClass: "tw-mx-auto" }, [
-            _c(
-              "h2",
-              {
-                staticClass: "tw-text-3xl sm:tw-text-4xl tw-text-center",
-                staticStyle: { "font-family": "Scarlet" },
-              },
-              [_vm._v(" Tata Tertib Acara ")]
-            ),
-          ]),
-        ]),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "carousel tw-mt-8", attrs: { "data-flickity": "" } },
-          [
-            _c("div", { staticClass: "carousel-cell tw-w-full tw-h-28" }, [
-              _c("div", { staticClass: "card tw-px-4 tw-py-4 tw-h-full" }, [
-                _c("div", { staticClass: "tw-flex tw-items-center" }, [
-                  _c("div", { staticClass: "tw-w-1/4" }, [
-                    _c("img", {
-                      staticClass: "tw-h-auto tw-mx-auto",
-                      attrs: {
-                        src: "assets/images/protocol/protocol-1.png",
-                        width: "85",
-                        alt: "Masker",
-                      },
-                    }),
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "tw-w-3/4 sm:tw-w-full" }, [
-                    _c(
-                      "p",
-                      {
-                        staticClass:
-                          "tw-text-center tw-text-base sm:tw-text-xl tw-font-semibold tw-break-words",
-                      },
-                      [_vm._v("Wajib menggunakan masker")]
-                    ),
-                  ]),
-                ]),
-              ]),
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "carousel-cell tw-w-full tw-h-28" }, [
-              _c("div", { staticClass: "card tw-px-4 tw-py-4 tw-h-full" }, [
-                _c("div", { staticClass: "tw-flex  tw-items-center" }, [
-                  _c("div", { staticClass: "tw-w-1/4" }, [
-                    _c("img", {
-                      staticClass: "tw-h-auto tw-mx-auto",
-                      attrs: {
-                        src: "assets/images/protocol/protocol-4.png",
-                        width: "85",
-                        alt: "Mencuci Tangan",
-                      },
-                    }),
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "tw-w-3/4" }, [
-                    _c(
-                      "p",
-                      {
-                        staticClass:
-                          "tw-text-center tw-text-base sm:tw-text-xl tw-font-semibold tw-break-words",
-                      },
-                      [
-                        _vm._v(
-                          "Mencuci tangan menggunakan hand sanitizer atau air dan sabun"
-                        ),
-                      ]
-                    ),
-                  ]),
-                ]),
-              ]),
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "carousel-cell tw-w-full tw-h-28" }, [
-              _c("div", { staticClass: "card tw-px-4 tw-py-4 tw-h-full" }, [
-                _c("div", { staticClass: "tw-flex tw-items-center" }, [
-                  _c("div", { staticClass: "tw-w-1/4" }, [
-                    _c("img", {
-                      staticClass: "tw-h-auto tw-mx-auto",
-                      attrs: {
-                        src: "assets/images/protocol/protocol-3.png",
-                        width: "85",
-                        alt: "Physical Distancing",
-                      },
-                    }),
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "tw-w-3/4" }, [
-                    _c(
-                      "p",
-                      {
-                        staticClass:
-                          "tw-text-center tw-text-base sm:tw-text-xl tw-font-semibold tw-break-words",
-                      },
-                      [_vm._v("Menerapkan physical distancing")]
-                    ),
-                  ]),
-                ]),
-              ]),
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "carousel-cell tw-w-full tw-h-28" }, [
-              _c("div", { staticClass: "card tw-px-4 tw-py-4 tw-h-full" }, [
-                _c("div", { staticClass: "tw-flex  tw-items-center" }, [
-                  _c("div", { staticClass: "tw-w-1/4" }, [
-                    _c("img", {
-                      staticClass: "tw-h-auto tw-mx-auto",
-                      attrs: {
-                        src: "assets/images/protocol/protocol-2.png",
-                        width: "85",
-                        alt: "Berlaku 2 orang",
-                      },
-                    }),
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "tw-w-3/4" }, [
-                    _c(
-                      "p",
-                      {
-                        staticClass:
-                          "tw-text-center tw-text-base sm:tw-text-xl tw-font-semibold tw-break-words",
-                      },
-                      [_vm._v("Undangan ini hanya berlaku untuk 2 orang")]
-                    ),
-                  ]),
-                ]),
-              ]),
-            ]),
-          ]
-        ),
-      ]
-    )
-  },
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -5372,8 +5867,8 @@ render._withStripped = true
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "render": () => (/* binding */ render),
-/* harmony export */   "staticRenderFns": () => (/* binding */ staticRenderFns)
+/* harmony export */   render: () => (/* binding */ render),
+/* harmony export */   staticRenderFns: () => (/* binding */ staticRenderFns)
 /* harmony export */ });
 var render = function () {
   var _vm = this
@@ -5386,14 +5881,10 @@ var render = function () {
           "h2",
           {
             staticClass:
-              "tw-text-3xl tw-mt-3 sm:tw-text-4xl md:tw-text-5xl yn-color tw-text-center uk-scrollspy-inview",
+              "\n                    tw-text-3xl tw-mt-3\n                    sm:tw-text-4xl\n                    md:tw-text-5xl\n                    yn-color\n                    tw-text-center\n                    uk-scrollspy-inview\n                ",
           },
-          [_vm._v("\n                Save The Date ")]
+          [_vm._v("\n                Save The Date\n            ")]
         ),
-        _vm._v(" "),
-        _c("p", { staticClass: "tw-text-center tw-mt-2 tw-mb-8 tw-text-md" }, [
-          _vm._v("Minggu, 07 November 2021"),
-        ]),
         _vm._v(" "),
         _vm._m(0),
         _vm._v(" "),
@@ -5408,113 +5899,310 @@ var render = function () {
               "div",
               {
                 staticClass:
-                  "uk-grid-small uk-child-width-expand uk-grid uk-grid-stack",
+                  "\n                        uk-grid-small\n                        uk-child-width-expand\n                        uk-grid\n                        uk-grid-stack\n                    ",
                 attrs: { "uk-grid": "" },
               },
               [
                 _c("div", { staticClass: "uk-first-column" }, [
                   _vm._m(1),
                   _vm._v(" "),
-                  _vm._m(2),
+                  _c(
+                    "div",
+                    { staticClass: "tw-grid tw-grid-cols-1 tw-gap-10" },
+                    [
+                      _c("div", [
+                        _c(
+                          "p",
+                          {
+                            staticClass:
+                              "\n                                        tw-text-brown-lighter\n                                        tw-font-normal\n                                        tw-text-1xl\n                                        sm:tw-text-2xl\n                                        lg:tw-text-3xl\n                                    ",
+                            staticStyle: { "font-family": "Greenlight Script" },
+                          },
+                          [
+                            _vm._v(
+                              "\n                                    Akad\n                                "
+                            ),
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "p",
+                          {
+                            staticClass:
+                              "\n                                        tw-text-center tw-mt-2\n                                        md:tw-mt-4\n                                        tw-text-md\n                                        sm:tw-text-base\n                                        md:tw-text-base\n                                    ",
+                            staticStyle: { "font-size": "14px" },
+                          },
+                          [
+                            _vm._v(
+                              "\n                                    Kamis, 12 Desember 2024\n                                "
+                            ),
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "p",
+                          {
+                            staticClass:
+                              "\n                                        tw-text-center tw-mt-2\n                                        md:tw-mt-4\n                                        tw-text-md\n                                        sm:tw-text-base\n                                        md:tw-text-base\n                                    ",
+                            staticStyle: { "font-size": "14px" },
+                          },
+                          [
+                            _vm._v(
+                              "\n                                    Pukul 09.00 WITA - Selesai\n                                "
+                            ),
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "p",
+                          {
+                            staticClass:
+                              "\n                                        tw-text-1xl tw-text-center\n                                        md:tw-text-2xl\n                                    ",
+                          },
+                          [
+                            _vm._v(
+                              "\n                                    Rumah\n                                "
+                            ),
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "p",
+                          {
+                            staticStyle: {
+                              "font-size": "14px",
+                              "text-align": "center",
+                              margin: "8px 0 0px 0",
+                            },
+                          },
+                          [
+                            _vm._v(
+                              "\n                                    Jl. Manado, Kel. Liluwo, Kec. Kota\n                                    Tengah, Kota Gorontalo\n                                "
+                            ),
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c("p", {
+                          staticStyle: {
+                            "font-size": "14px",
+                            "text-align": "center",
+                            margin: "8px 0 0px 0",
+                          },
+                        }),
+                        _vm._v(" "),
+                        _c(
+                          "a",
+                          {
+                            staticClass:
+                              "\n                                        uk-button\n                                        uk-button-default\n                                        uk-button-small\n                                        btn-white\n                                    ",
+                            staticStyle: {
+                              "margin-top": "16px",
+                              padding: "4px 16px",
+                              "border-radius": "20px",
+                            },
+                            attrs: {
+                              href: "https://maps.app.goo.gl/JZnPrVBAac34ijLw9",
+                            },
+                          },
+                          [
+                            _vm._v(
+                              "Lihat Lokasi Via Google Map\n                                    "
+                            ),
+                            _c(
+                              "span",
+                              {
+                                staticClass: "uk-icon",
+                                attrs: { "uk-icon": "icon: arrow-right" },
+                              },
+                              [
+                                _c(
+                                  "svg",
+                                  {
+                                    attrs: {
+                                      width: "20",
+                                      height: "20",
+                                      viewBox: "0 0 20 20",
+                                      xmlns: "http://www.w3.org/2000/svg",
+                                    },
+                                  },
+                                  [
+                                    _c("polyline", {
+                                      attrs: {
+                                        fill: "none",
+                                        stroke: "#000",
+                                        points: "10 5 15 9.5 10 14",
+                                      },
+                                    }),
+                                    _vm._v(" "),
+                                    _c("line", {
+                                      attrs: {
+                                        fill: "none",
+                                        stroke: "#000",
+                                        x1: "4",
+                                        y1: "9.5",
+                                        x2: "15",
+                                        y2: "9.5",
+                                      },
+                                    }),
+                                  ]
+                                ),
+                              ]
+                            ),
+                          ]
+                        ),
+                      ]),
+                      _vm._v(" "),
+                      _vm._m(2),
+                      _vm._v(" "),
+                      _c("div", [
+                        _c(
+                          "p",
+                          {
+                            staticClass:
+                              "\n                                        tw-text-brown-lighter\n                                        tw-font-normal\n                                        tw-text-1xl\n                                        sm:tw-text-2xl\n                                        lg:tw-text-3xl\n                                    ",
+                            staticStyle: { "font-family": "Greenlight Script" },
+                          },
+                          [
+                            _vm._v(
+                              "\n                                    Resepsi\n                                "
+                            ),
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "p",
+                          {
+                            staticClass:
+                              "\n                                        tw-text-center tw-mt-2\n                                        md:tw-mt-4\n                                        tw-text-md\n                                        sm:tw-text-base\n                                        md:tw-text-base\n                                    ",
+                            staticStyle: { "font-size": "14px" },
+                          },
+                          [
+                            _vm._v(
+                              "\n                                    Jum'at, 13 Desember 2024\n                                "
+                            ),
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "p",
+                          {
+                            staticClass:
+                              "\n                                        tw-text-center tw-mt-2\n                                        md:tw-mt-4\n                                        tw-text-md\n                                        sm:tw-text-base\n                                        md:tw-text-base\n                                    ",
+                            staticStyle: { "font-size": "14px" },
+                          },
+                          [
+                            _vm._v(
+                              "\n                                    Pukul 19.00 WITA - Selesai\n                                "
+                            ),
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "p",
+                          {
+                            staticClass:
+                              "\n                                        tw-text-1xl tw-text-center\n                                        md:tw-text-2xl\n                                    ",
+                          },
+                          [
+                            _vm._v(
+                              "\n                                    Gedung Graha Azizah\n                                "
+                            ),
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "p",
+                          {
+                            staticStyle: {
+                              "font-size": "14px",
+                              "text-align": "center",
+                              margin: "8px 0 0px 0",
+                            },
+                          },
+                          [
+                            _vm._v(
+                              "\n                                    Jl. Manggus Molosipat W, Kec. Kota\n                                    Barat, Kota Gorontalo, Gorontalo\n                                "
+                            ),
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c("p", {
+                          staticStyle: {
+                            "font-size": "14px",
+                            "text-align": "center",
+                            margin: "8px 0 0px 0",
+                          },
+                        }),
+                        _vm._v(" "),
+                        _c(
+                          "a",
+                          {
+                            staticClass:
+                              "\n                                        uk-button\n                                        uk-button-default\n                                        uk-button-small\n                                        btn-white\n                                    ",
+                            staticStyle: {
+                              "margin-top": "16px",
+                              padding: "4px 16px",
+                              "border-radius": "20px",
+                            },
+                            attrs: {
+                              href: "https://maps.app.goo.gl/QdU6F68xoxcBunNT9",
+                            },
+                          },
+                          [
+                            _vm._v(
+                              "Lihat Lokasi Via Google Map\n                                    "
+                            ),
+                            _c(
+                              "span",
+                              {
+                                staticClass: "uk-icon",
+                                attrs: { "uk-icon": "icon: arrow-right" },
+                              },
+                              [
+                                _c(
+                                  "svg",
+                                  {
+                                    attrs: {
+                                      width: "20",
+                                      height: "20",
+                                      viewBox: "0 0 20 20",
+                                      xmlns: "http://www.w3.org/2000/svg",
+                                    },
+                                  },
+                                  [
+                                    _c("polyline", {
+                                      attrs: {
+                                        fill: "none",
+                                        stroke: "#000",
+                                        points: "10 5 15 9.5 10 14",
+                                      },
+                                    }),
+                                    _vm._v(" "),
+                                    _c("line", {
+                                      attrs: {
+                                        fill: "none",
+                                        stroke: "#000",
+                                        x1: "4",
+                                        y1: "9.5",
+                                        x2: "15",
+                                        y2: "9.5",
+                                      },
+                                    }),
+                                  ]
+                                ),
+                              ]
+                            ),
+                          ]
+                        ),
+                      ]),
+                    ]
+                  ),
                   _vm._v(" "),
                   _vm._m(3),
                   _vm._v(" "),
-                  _c(
-                    "p",
-                    {
-                      staticClass: "tw-text-1xl tw-text-center md:tw-text-2xl",
-                    },
-                    [_vm._v(" Villa Lagenta ")]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "p",
-                    {
-                      staticStyle: {
-                        "font-size": "14px",
-                        "text-align": "center",
-                        margin: "8px 0 0px 0",
-                      },
-                    },
-                    [
-                      _vm._v(
-                        "\n                            Jl. Kol. Masturi No. 8, Lembang, Jawa Barat 40391 "
-                      ),
-                    ]
-                  ),
-                  _vm._v(" "),
-                  _c("p", {
-                    staticStyle: {
-                      "font-size": "14px",
-                      "text-align": "center",
-                      margin: "8px 0 0px 0",
-                    },
-                  }),
-                  _vm._v(" "),
-                  _c(
-                    "a",
-                    {
-                      staticClass:
-                        "uk-button uk-button-default uk-button-small btn-white",
-                      staticStyle: {
-                        "margin-top": "16px",
-                        padding: "4px 16px",
-                        "border-radius": "20px",
-                      },
-                      attrs: { href: "https://goo.gl/maps/GrcAzNeiZMVEhWzcA" },
-                    },
-                    [
-                      _vm._v(
-                        "Lihat Lokasi Via Google Map\n                            "
-                      ),
-                      _c(
-                        "span",
-                        {
-                          staticClass: "uk-icon",
-                          attrs: { "uk-icon": "icon: arrow-right" },
-                        },
-                        [
-                          _c(
-                            "svg",
-                            {
-                              attrs: {
-                                width: "20",
-                                height: "20",
-                                viewBox: "0 0 20 20",
-                                xmlns: "http://www.w3.org/2000/svg",
-                              },
-                            },
-                            [
-                              _c("polyline", {
-                                attrs: {
-                                  fill: "none",
-                                  stroke: "#000",
-                                  points: "10 5 15 9.5 10 14",
-                                },
-                              }),
-                              _vm._v(" "),
-                              _c("line", {
-                                attrs: {
-                                  fill: "none",
-                                  stroke: "#000",
-                                  x1: "4",
-                                  y1: "9.5",
-                                  x2: "15",
-                                  y2: "9.5",
-                                },
-                              }),
-                            ]
-                          ),
-                        ]
-                      ),
-                    ]
-                  ),
-                  _vm._v(" "),
-                  _vm._m(4),
-                  _vm._v(" "),
                   _c("p", { staticClass: "tw-text-sm tw-leading-relaxed" }, [
                     _vm._v(
-                      "\n                            Ungkapan terima kasih yang tulus dari kami apabila Bapak/Ibu/Teman-teman berkenan hadir dan\n                            memberikan doa restu.\n                        "
+                      "\n                            Ungkapan terima kasih yang tulus dari kami\n                            apabila Bapak/Ibu/Teman-teman berkenan hadir dan\n                            memberikan doa restu.\n                        "
                     ),
                   ]),
                 ]),
@@ -5535,26 +6223,26 @@ var staticRenderFns = [
       "div",
       {
         staticClass:
-          "uk-grid-small uk-flex-center uk-child-width-auto yn-color2 yn-anim uk-grid uk-countdown uk-scrollspy-inview",
+          "\n                    uk-grid-small uk-flex-center uk-child-width-auto\n                    yn-color2 yn-anim\n                    uk-grid uk-countdown uk-scrollspy-inview\n                ",
         attrs: {
           "uk-grid": "",
-          "uk-countdown": "date: 2021-11-07T11:00:00+07:00",
+          "uk-countdown": "date: 2024-12-07T11:00:00+07:00",
         },
       },
       [
         _c("div", [
           _c("div", {
             staticClass:
-              "sm:tw-text-4xl md:tw-text-5xl tw-font-semibold uk-countdown-number uk-countdown-days",
+              "\n                            sm:tw-text-4xl\n                            md:tw-text-5xl\n                            tw-font-semibold\n                            uk-countdown-number uk-countdown-days\n                        ",
           }),
           _vm._v(" "),
           _c(
             "div",
             {
               staticClass:
-                "sm:tw-text-3xl md:tw-text-4xl tw-font-semibold uk-countdown-label uk-margin-small uk-text-center",
+                "\n                            sm:tw-text-3xl\n                            md:tw-text-4xl\n                            tw-font-semibold\n                            uk-countdown-label\n                            uk-margin-small\n                            uk-text-center\n                        ",
             },
-            [_vm._v("\n                        Hari")]
+            [_vm._v("\n                        Hari\n                    ")]
           ),
         ]),
         _vm._v(" "),
@@ -5563,16 +6251,16 @@ var staticRenderFns = [
         _c("div", [
           _c("div", {
             staticClass:
-              "sm:tw-text-4xl md:tw-text-5xl tw-font-semibold uk-countdown-number uk-countdown-hours",
+              "\n                            sm:tw-text-4xl\n                            md:tw-text-5xl\n                            tw-font-semibold\n                            uk-countdown-number uk-countdown-hours\n                        ",
           }),
           _vm._v(" "),
           _c(
             "div",
             {
               staticClass:
-                "sm:tw-text-3xl md:tw-text-4xl tw-font-semibold uk-countdown-label uk-margin-small uk-text-center",
+                "\n                            sm:tw-text-3xl\n                            md:tw-text-4xl\n                            tw-font-semibold\n                            uk-countdown-label\n                            uk-margin-small\n                            uk-text-center\n                        ",
             },
-            [_vm._v("\n                        Jam")]
+            [_vm._v("\n                        Jam\n                    ")]
           ),
         ]),
         _vm._v(" "),
@@ -5581,16 +6269,16 @@ var staticRenderFns = [
         _c("div", [
           _c("div", {
             staticClass:
-              "sm:tw-text-4xl md:tw-text-5xl tw-font-semibold sm:tw-text-center uk-countdown-number uk-countdown-minutes",
+              "\n                            sm:tw-text-4xl\n                            md:tw-text-5xl\n                            tw-font-semibold\n                            sm:tw-text-center\n                            uk-countdown-number uk-countdown-minutes\n                        ",
           }),
           _vm._v(" "),
           _c(
             "div",
             {
               staticClass:
-                "sm:tw-text-3xl md:tw-text-4xl tw-font-semibold uk-countdown-label uk-margin-small uk-text-center",
+                "\n                            sm:tw-text-3xl\n                            md:tw-text-4xl\n                            tw-font-semibold\n                            uk-countdown-label\n                            uk-margin-small\n                            uk-text-center\n                        ",
             },
-            [_vm._v("\n                        Menit")]
+            [_vm._v("\n                        Menit\n                    ")]
           ),
         ]),
         _vm._v(" "),
@@ -5599,16 +6287,16 @@ var staticRenderFns = [
         _c("div", [
           _c("div", {
             staticClass:
-              "sm:tw-text-4xl md:tw-text-5xl tw-font-semibold sm:tw-text-center uk-countdown-number uk-countdown-seconds",
+              "\n                            sm:tw-text-4xl\n                            md:tw-text-5xl\n                            tw-font-semibold\n                            sm:tw-text-center\n                            uk-countdown-number uk-countdown-seconds\n                        ",
           }),
           _vm._v(" "),
           _c(
             "div",
             {
               staticClass:
-                "sm:tw-text-3xl md:tw-text-4xl tw-font-semibold uk-countdown-label uk-margin-small uk-text-center",
+                "\n                            sm:tw-text-3xl\n                            md:tw-text-4xl\n                            tw-font-semibold\n                            uk-countdown-label\n                            uk-margin-small\n                            uk-text-center\n                        ",
             },
-            [_vm._v("\n                        Detik")]
+            [_vm._v("\n                        Detik\n                    ")]
           ),
         ]),
       ]
@@ -5623,56 +6311,6 @@ var staticRenderFns = [
         staticClass: "tw-mx-auto",
         attrs: { src: "assets/images/pemisah.png", alt: "divider" },
       }),
-    ])
-  },
-  function () {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "tw-grid tw-grid-cols-1 tw-gap-10" }, [
-      _c("div", [
-        _c(
-          "p",
-          {
-            staticClass:
-              "tw-text-brown-lighter tw-font-normal tw-text-1xl sm:tw-text-2xl lg:tw-text-3xl",
-            staticStyle: { "font-family": "Greenlight Script" },
-          },
-          [_vm._v("Akad")]
-        ),
-        _vm._v(" "),
-        _c(
-          "p",
-          {
-            staticClass:
-              "tw-text-center tw-mt-2 md:tw-mt-4 tw-text-md sm:tw-text-base md:tw-text-base",
-            staticStyle: { "font-size": "14px" },
-          },
-          [_vm._v("Pukul 08.00 - 09.00 WIB")]
-        ),
-      ]),
-      _vm._v(" "),
-      _c("div", [
-        _c(
-          "p",
-          {
-            staticClass:
-              "tw-text-brown-lighter tw-font-normal tw-text-1xl sm:tw-text-2xl lg:tw-text-3xl",
-            staticStyle: { "font-family": "Greenlight Script" },
-          },
-          [_vm._v("Resepsi")]
-        ),
-        _vm._v(" "),
-        _c(
-          "p",
-          {
-            staticClass:
-              "tw-text-center tw-mt-2 md:tw-mt-4 tw-text-md sm:tw-text-base md:tw-text-base",
-            staticStyle: { "font-size": "14px" },
-          },
-          [_vm._v("Pukul 10.45 - 14.00 WIB")]
-        ),
-      ]),
     ])
   },
   function () {
@@ -5713,8 +6351,8 @@ render._withStripped = true
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "render": () => (/* binding */ render),
-/* harmony export */   "staticRenderFns": () => (/* binding */ staticRenderFns)
+/* harmony export */   render: () => (/* binding */ render),
+/* harmony export */   staticRenderFns: () => (/* binding */ staticRenderFns)
 /* harmony export */ });
 var render = function () {
   var _vm = this
@@ -5733,7 +6371,7 @@ var render = function () {
             "div",
             {
               staticClass:
-                "tw-flex-none tw-h-12 tw-w-12 sm:tw-h-14 sm:tw-w-14 md:tw-h-14 md:tw-w-14  tw-rounded-full tw-bg-brown-lighter tw-relative",
+                "tw-flex-none tw-h-12 tw-w-12 sm:tw-h-14 sm:tw-w-14 md:tw-h-14 md:tw-w-14 tw-rounded-full tw-bg-brown-lighter tw-relative",
             },
             [
               _c(
@@ -5828,8 +6466,8 @@ render._withStripped = true
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "render": () => (/* binding */ render),
-/* harmony export */   "staticRenderFns": () => (/* binding */ staticRenderFns)
+/* harmony export */   render: () => (/* binding */ render),
+/* harmony export */   staticRenderFns: () => (/* binding */ staticRenderFns)
 /* harmony export */ });
 var render = function () {
   var _vm = this
@@ -5848,7 +6486,7 @@ var staticRenderFns = [
         {
           staticClass: "tw-bg-cover tw-bg-center",
           staticStyle: {
-            "background-image": "url('assets/images/gallery/cover.jpg')",
+            "background-image": "url('assets/images/gallery/profile.jpeg')",
           },
         },
         [
@@ -5858,10 +6496,14 @@ var staticRenderFns = [
                 "p",
                 {
                   staticClass:
-                    "tw-font-light tw-text-sm lg:tw-text-md lg:tw-font-normal tw-text-center uk-scrollspy-inview",
+                    "\n                        tw-font-light tw-text-sm\n                        lg:tw-text-md lg:tw-font-extrabold\n                        tw-text-center\n                        uk-scrollspy-inview\n                        tw-text-black\n                    ",
                   staticStyle: { "letter-spacing": "3px", color: "#ffffffb3" },
                 },
-                [_vm._v("WEDDING INVITATION")]
+                [
+                  _vm._v(
+                    "\n                    WEDDING INVITATION\n                "
+                  ),
+                ]
               ),
               _vm._v(" "),
               _c("div", { staticClass: "tw-h-64" }),
@@ -5871,9 +6513,13 @@ var staticRenderFns = [
                   "h2",
                   {
                     staticClass:
-                      "tw-text-4xl lg:tw-text-5xl tw-text-center tw-font-light uk-scrollspy-inview",
+                      "\n                            tw-text-4xl\n                            lg:tw-text-5xl\n                            tw-text-center tw-font-extrabold\n                            uk-scrollspy-inview\n                            bg-clip-border\n                            tw-text-gray-200\n                            p-6\n                        ",
                   },
-                  [_vm._v("Khansa & Salman")]
+                  [
+                    _vm._v(
+                      "\n                        Citra & Ardian\n                    "
+                    ),
+                  ]
                 ),
               ]),
               _vm._v(" "),
@@ -5881,10 +6527,10 @@ var staticRenderFns = [
                 "p",
                 {
                   staticClass:
-                    "tw-text-center tw-font-light tw-text-xs lg:tw-text-lg lg:tw-font-normal uk-scrollspy-inview",
+                    "\n                        tw-text-center tw-font-light tw-text-xs\n                        lg:tw-text-lg lg:tw-font-normal\n                        uk-scrollspy-inview\n                        tw-text-black\n                    ",
                   staticStyle: { color: "#bdaa8b", "letter-spacing": "3px" },
                 },
-                [_vm._v("07.11.2021")]
+                [_vm._v("\n                    12.12.2024\n                ")]
               ),
             ]),
           ]),
@@ -5908,8 +6554,8 @@ render._withStripped = true
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "render": () => (/* binding */ render),
-/* harmony export */   "staticRenderFns": () => (/* binding */ staticRenderFns)
+/* harmony export */   render: () => (/* binding */ render),
+/* harmony export */   staticRenderFns: () => (/* binding */ staticRenderFns)
 /* harmony export */ });
 var render = function () {
   var _vm = this
@@ -6160,8 +6806,8 @@ render._withStripped = true
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "render": () => (/* binding */ render),
-/* harmony export */   "staticRenderFns": () => (/* binding */ staticRenderFns)
+/* harmony export */   render: () => (/* binding */ render),
+/* harmony export */   staticRenderFns: () => (/* binding */ staticRenderFns)
 /* harmony export */ });
 var render = function () {
   var _vm = this
@@ -6188,7 +6834,7 @@ var staticRenderFns = [
               "h2",
               {
                 staticClass:
-                  "tw-text-3xl sm:tw-text-4xl tw-mb-8 uk-text-center midnight yn-color yn-anim uk-scrollspy-inview ",
+                  "\n                    tw-text-3xl\n                    sm:tw-text-4xl\n                    tw-mb-8\n                    uk-text-center\n                    midnight\n                    yn-color yn-anim\n                    uk-scrollspy-inview\n                ",
               },
               [_vm._v("\n                Gallery\n            ")]
             ),
@@ -6204,14 +6850,14 @@ var staticRenderFns = [
                   _c(
                     "a",
                     {
-                      staticClass: "uk-inline yn-anim uk-scrollspy-inview ",
-                      attrs: { href: "assets/images/gallery/1.jpg" },
+                      staticClass: "uk-inline yn-anim uk-scrollspy-inview",
+                      attrs: { href: "assets/images/gallery/galery-1.jpeg" },
                     },
                     [
                       _c("img", {
                         staticClass: "thumb-gallery",
                         attrs: {
-                          src: "assets/images/gallery/1.jpg",
+                          src: "assets/images/gallery/galery-1.jpeg",
                           alt: "Our Prawedding Photo",
                         },
                       }),
@@ -6223,14 +6869,14 @@ var staticRenderFns = [
                   _c(
                     "a",
                     {
-                      staticClass: "uk-inline yn-anim uk-scrollspy-inview ",
-                      attrs: { href: "assets/images/gallery/2.jpg" },
+                      staticClass: "uk-inline yn-anim uk-scrollspy-inview",
+                      attrs: { href: "assets/images/gallery/galery-2.1.jpeg" },
                     },
                     [
                       _c("img", {
                         staticClass: "thumb-gallery",
                         attrs: {
-                          src: "assets/images/gallery/2.jpg",
+                          src: "assets/images/gallery/galery-2.1.jpeg",
                           alt: "Our Prawedding Photo",
                         },
                       }),
@@ -6242,14 +6888,14 @@ var staticRenderFns = [
                   _c(
                     "a",
                     {
-                      staticClass: "uk-inline yn-anim uk-scrollspy-inview ",
-                      attrs: { href: "assets/images/gallery/3.jpg" },
+                      staticClass: "uk-inline yn-anim uk-scrollspy-inview",
+                      attrs: { href: "assets/images/gallery/galery-2.3.jpeg" },
                     },
                     [
                       _c("img", {
                         staticClass: "thumb-gallery",
                         attrs: {
-                          src: "assets/images/gallery/3.jpg",
+                          src: "assets/images/gallery/galery-2.3.jpeg",
                           alt: "Our Prawedding Photo",
                         },
                       }),
@@ -6261,14 +6907,14 @@ var staticRenderFns = [
                   _c(
                     "a",
                     {
-                      staticClass: "uk-inline yn-anim uk-scrollspy-inview ",
-                      attrs: { href: "assets/images/gallery/6.jpg" },
+                      staticClass: "uk-inline yn-anim uk-scrollspy-inview",
+                      attrs: { href: "assets/images/gallery/galery-2.4.jpeg" },
                     },
                     [
                       _c("img", {
                         staticClass: "thumb-gallery",
                         attrs: {
-                          src: "assets/images/gallery/6.jpg",
+                          src: "assets/images/gallery/galery-2.4.jpeg",
                           alt: "Our Prawedding Photo",
                         },
                       }),
@@ -6280,14 +6926,14 @@ var staticRenderFns = [
                   _c(
                     "a",
                     {
-                      staticClass: "uk-inline yn-anim uk-scrollspy-inview ",
-                      attrs: { href: "assets/images/gallery/4.jpg" },
+                      staticClass: "uk-inline yn-anim uk-scrollspy-inview",
+                      attrs: { href: "assets/images/gallery/galery-2.jpeg" },
                     },
                     [
                       _c("img", {
                         staticClass: "thumb-gallery",
                         attrs: {
-                          src: "assets/images/gallery/4.jpg",
+                          src: "assets/images/gallery/galery-2.jpeg",
                           alt: "Our Prawedding Photo",
                         },
                       }),
@@ -6299,14 +6945,14 @@ var staticRenderFns = [
                   _c(
                     "a",
                     {
-                      staticClass: "uk-inline yn-anim uk-scrollspy-inview ",
-                      attrs: { href: "assets/images/gallery/5.jpg" },
+                      staticClass: "uk-inline yn-anim uk-scrollspy-inview",
+                      attrs: { href: "assets/images/gallery/galery-3.jpeg" },
                     },
                     [
                       _c("img", {
                         staticClass: "thumb-gallery",
                         attrs: {
-                          src: "assets/images/gallery/5.jpg",
+                          src: "assets/images/gallery/galery-3.jpeg",
                           alt: "Our Prawedding Photo",
                         },
                       }),
@@ -6318,14 +6964,14 @@ var staticRenderFns = [
                   _c(
                     "a",
                     {
-                      staticClass: "uk-inline yn-anim uk-scrollspy-inview ",
-                      attrs: { href: "assets/images/gallery/7.jpg" },
+                      staticClass: "uk-inline yn-anim uk-scrollspy-inview",
+                      attrs: { href: "assets/images/gallery/galery-4.jpeg" },
                     },
                     [
                       _c("img", {
                         staticClass: "thumb-gallery",
                         attrs: {
-                          src: "assets/images/gallery/7.jpg",
+                          src: "assets/images/gallery/galery-4.jpeg",
                           alt: "Our Prawedding Photo",
                         },
                       }),
@@ -6337,14 +6983,14 @@ var staticRenderFns = [
                   _c(
                     "a",
                     {
-                      staticClass: "uk-inline yn-anim uk-scrollspy-inview ",
-                      attrs: { href: "assets/images/gallery/8.jpg" },
+                      staticClass: "uk-inline yn-anim uk-scrollspy-inview",
+                      attrs: { href: "assets/images/gallery/bg.jpeg" },
                     },
                     [
                       _c("img", {
                         staticClass: "thumb-gallery",
                         attrs: {
-                          src: "assets/images/gallery/8.jpg",
+                          src: "assets/images/gallery/bg.jpeg",
                           alt: "Our Prawedding Photo",
                         },
                       }),
@@ -6374,8 +7020,8 @@ render._withStripped = true
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "render": () => (/* binding */ render),
-/* harmony export */   "staticRenderFns": () => (/* binding */ staticRenderFns)
+/* harmony export */   render: () => (/* binding */ render),
+/* harmony export */   staticRenderFns: () => (/* binding */ staticRenderFns)
 /* harmony export */ });
 var render = function () {
   var _vm = this
@@ -6394,7 +7040,7 @@ var staticRenderFns = [
           "div",
           {
             staticClass:
-              "sm:tw-max-w-screen-sm md:tw-max-w-screen-md lg:tw-max-w-screen-lg tw-mx-auto tw-px-2.5 tw-py-10",
+              "\n                sm:tw-max-w-screen-sm\n                md:tw-max-w-screen-md\n                lg:tw-max-w-screen-lg\n                tw-mx-auto tw-px-2.5 tw-py-10\n            ",
           },
           [
             _c("img", {
@@ -6411,20 +7057,11 @@ var staticRenderFns = [
               "p",
               {
                 staticClass:
-                  "tw-text-sm lg:tw-font-semibold tw-font-normal tw-text-center w-py-2",
-              },
-              [_vm._v("Assalamualaikum warahmatullahi wabarakatuh")]
-            ),
-            _vm._v(" "),
-            _c(
-              "p",
-              {
-                staticClass:
-                  "tw-text-sm tw-leading-relaxed lg:tw-font-semibold tw-font-normal tw-text-justify md:tw-text-center lg:tw-hidden tw-py-4 tw-mb-10",
+                  "\n                    tw-text-sm\n                    lg:tw-font-semibold\n                    tw-font-normal tw-text-center\n                    w-py-2\n                ",
               },
               [
                 _vm._v(
-                  "\n                Dengan memohon rahmat dan ridho-Mu Ya\n                Allah, Kami bermaksud mengadakan acara pernikahan putra dan putri kami.\n            "
+                  "\n                Assalamualaikum warahmatullahi wabarakatuh\n            "
                 ),
               ]
             ),
@@ -6433,15 +7070,28 @@ var staticRenderFns = [
               "p",
               {
                 staticClass:
-                  "tw-hidden lg:tw-block tw-leading-relaxed tw-text-sm lg:tw-font-semibold tw-font-normal tw-text-justify md:tw-text-center tw-py-4 tw-mb-16",
+                  "\n                    tw-text-sm tw-leading-relaxed\n                    lg:tw-font-semibold\n                    tw-font-normal tw-text-justify\n                    md:tw-text-center\n                    lg:tw-hidden\n                    tw-py-4 tw-mb-10\n                ",
               },
               [
                 _vm._v(
-                  "\n                Dengan memohon rahmat dan ridho-Mu Ya\n                Allah, "
+                  "\n                Dengan memohon rahmat dan ridho-Mu Ya Allah, Kami bermaksud\n                mengadakan acara pernikahan putra dan putri kami.\n            "
+                ),
+              ]
+            ),
+            _vm._v(" "),
+            _c(
+              "p",
+              {
+                staticClass:
+                  "\n                    tw-hidden\n                    lg:tw-block\n                    tw-leading-relaxed tw-text-sm\n                    lg:tw-font-semibold\n                    tw-font-normal tw-text-justify\n                    md:tw-text-center\n                    tw-py-4 tw-mb-16\n                ",
+              },
+              [
+                _vm._v(
+                  "\n                Dengan memohon rahmat dan ridho-Mu Ya Allah, "
                 ),
                 _c("br"),
                 _vm._v(
-                  " Kami bermaksud mengadakan acara pernikahan putra dan putri kami.\n            "
+                  "\n                Kami bermaksud mengadakan acara pernikahan putra dan putri\n                kami.\n            "
                 ),
               ]
             ),
@@ -6451,34 +7101,46 @@ var staticRenderFns = [
                 "div",
                 {
                   staticClass:
-                    "tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 sm:tw-gap-4 md:tw-gap-2 lg:tw-gap-6 tw-mx-auto",
+                    "\n                        tw-grid tw-grid-cols-1\n                        sm:tw-grid-cols-2 sm:tw-gap-4\n                        md:tw-gap-2\n                        lg:tw-gap-6\n                        tw-mx-auto\n                    ",
                 },
                 [
                   _c("div", { staticClass: "tw-text-center" }, [
                     _c("div", { staticClass: "pl tw-mx-auto" }),
                     _vm._v(" "),
+                    _c("img", {
+                      staticClass: "rounded-full w-96 h-96",
+                      attrs: {
+                        src: "assets/images/gallery/wanita.jpeg",
+                        alt: "image description",
+                      },
+                    }),
+                    _vm._v(" "),
                     _c(
                       "h2",
                       {
                         staticClass:
-                          "tw-py-3 m-name tw-text-1xl sm:tw-text-lg md:tw-text-1xl lg:tw-text-2xl",
+                          "\n                                tw-py-3\n                                m-name\n                                tw-text-1xl\n                                sm:tw-text-lg\n                                md:tw-text-1xl\n                                lg:tw-text-2xl\n                            ",
                       },
-                      [_vm._v("Falah Fadlillah, S.Ds.")]
+                      [
+                        _vm._v(
+                          "\n                            Cicit Irmawan\n                        "
+                        ),
+                      ]
                     ),
                     _vm._v(" "),
                     _c(
                       "p",
                       {
                         staticClass:
-                          "tw-text-sm lg:tw-font-semibold tw-font-normal tw-mb-10",
+                          "\n                                tw-text-sm\n                                lg:tw-font-semibold\n                                tw-font-normal tw-mb-10\n                            ",
                       },
                       [
                         _vm._v(
-                          "\n                            Putra dari Bpk Candra Utama, S.H. "
+                          "\n                            Putri Pertama dari Bpk. Karim D. Sahi (Alm.)\n                            "
                         ),
                         _c("br"),
                         _vm._v(
-                          "& Ibu Dra. Letfi Latifah\n                        "
+                          "& Ibu Hj. Tety N. Mowu'u\n                        "
                         ),
                       ]
                     ),
@@ -6487,27 +7149,41 @@ var staticRenderFns = [
                   _c("div", { staticClass: "tw-text-center" }, [
                     _c("div", { staticClass: "pw tw-mx-auto" }),
                     _vm._v(" "),
+                    _c("img", {
+                      staticClass: "rounded-full w-96 h-96",
+                      attrs: {
+                        src: "assets/images/gallery/laki.jpeg",
+                        alt: "image description",
+                      },
+                    }),
+                    _vm._v(" "),
                     _c(
                       "h2",
                       {
                         staticClass:
-                          "tw-py-3 m-name tw-text-1xl sm:tw-text-lg md:tw-text-1xl lg:tw-text-2xl",
+                          "\n                                tw-py-3\n                                m-name\n                                tw-text-1xl\n                                sm:tw-text-lg\n                                md:tw-text-1xl\n                                lg:tw-text-2xl\n                            ",
                       },
-                      [_vm._v("Lita Luthfiyyani, S.H.")]
+                      [
+                        _vm._v(
+                          "\n                            Ardian Abd. manan\n                        "
+                        ),
+                      ]
                     ),
                     _vm._v(" "),
                     _c(
                       "p",
                       {
                         staticClass:
-                          "tw-text-sm lg:tw-font-semibold tw-font-normal tw-mb-12 sm:tw-mb-20",
+                          "\n                                tw-text-sm\n                                lg:tw-font-semibold\n                                tw-font-normal tw-mb-12\n                                sm:tw-mb-20\n                            ",
                       },
                       [
                         _vm._v(
-                          "\n                            Putri dari Bpk Adjat Sudradjat, S.Hut. "
+                          "\n                            Putra Pertama dari Bpk Said Haij Umar. "
                         ),
                         _c("br"),
-                        _vm._v("& Ibu Iin Irnayati\n                        "),
+                        _vm._v(
+                          "&\n                            Ibu Muzna A. Manan\n                        "
+                        ),
                       ]
                     ),
                   ]),
@@ -22010,7 +22686,7 @@ Vue.compile = compileToFunctions;
 /******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
 /******/ 					installedChunks[chunkId][0]();
 /******/ 				}
-/******/ 				installedChunks[chunkIds[i]] = 0;
+/******/ 				installedChunks[chunkId] = 0;
 /******/ 			}
 /******/ 			return __webpack_require__.O(result);
 /******/ 		}
@@ -22018,6 +22694,11 @@ Vue.compile = compileToFunctions;
 /******/ 		var chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
 /******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
 /******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/nonce */
+/******/ 	(() => {
+/******/ 		__webpack_require__.nc = undefined;
 /******/ 	})();
 /******/ 	
 /************************************************************************/

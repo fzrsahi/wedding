@@ -16,119 +16,186 @@
             <div class="tw-h-24"></div>
 
             <section>
-                <h2
-                    class="tw-text-3xl sm:tw-text-4xl tw-text-center"
-                    style="font-family: Scarlet"
-                >
-                    Buku Tamu
-                </h2>
-
-                <button
-                    class="uk-button uk-button-success uk-align-center"
-                    type="button"
-                    uk-toggle="target: #buku; animation:  uk-animation-slide-left;"
-                    style="margin-bottom: 0px"
-                    aria-expanded="false"
-                >
-                    <span uk-icon="icon: file-edit;" class="uk-icon"
-                        ><svg
-                            width="20"
-                            height="20"
-                            viewBox="0 0 20 20"
-                            xmlns="http://www.w3.org/2000/svg"
+                <div>
+                    <section id="mempelai">
+                        <div
+                            class="
+                                sm:tw-max-w-screen-sm
+                                md:tw-max-w-screen-md
+                                lg:tw-max-w-screen-lg
+                                tw-mx-auto tw-px-2.5 tw-py-10
+                            "
                         >
-                            <path
-                                fill="none"
-                                stroke="#000"
-                                d="M18.65,1.68 C18.41,1.45 18.109,1.33 17.81,1.33 C17.499,1.33 17.209,1.45 16.98,1.68 L8.92,9.76 L8,12.33 L10.55,11.41 L18.651,3.34 C19.12,2.87 19.12,2.15 18.65,1.68 L18.65,1.68 L18.65,1.68 Z"
-                            ></path>
-                            <polyline
-                                fill="none"
-                                stroke="#000"
-                                points="16.5 8.482 16.5 18.5 3.5 18.5 3.5 1.5 14.211 1.5"
-                            ></polyline></svg
-                    ></span>
-                    Isi Buku Tamu
-                </button>
+                            <p
+                                class="
+                                    tw-text-sm tw-leading-relaxed
+                                    lg:tw-font-semibold
+                                    tw-font-normal tw-text-justify
+                                    md:tw-text-center
+                                    lg:tw-hidden
+                                    tw-py-4 tw-mb-10
+                                "
+                            >
+                                Dengan memohon rahmat dan ridho-Mu Ya Allah,
+                                Kami bermaksud mengadakan acara pernikahan putra
+                                dan putri kami.
+                            </p>
+                            <p
+                                class="
+                                    tw-hidden
+                                    lg:tw-block
+                                    tw-leading-relaxed tw-text-sm
+                                    lg:tw-font-semibold
+                                    tw-font-normal tw-text-justify
+                                    md:tw-text-center
+                                    tw-py-4 tw-mb-16
+                                "
+                            >
+                                Turut Mengundang :
+                            </p>
 
-                <a
-                    class="uk-button uk-button-success uk-align-center"
-                    href="#modal-center"
-                    uk-toggle=""
-                    style="width: 171px; margin-top: 8px"
-                    aria-expanded="false"
-                    >Gifts</a
+                            <div class="lg:tw-w-4/5 lg:tw-mx-auto">
+                                <div
+                                    class="
+                                        tw-grid tw-grid-cols-1
+                                        sm:tw-grid-cols-2 sm:tw-gap-4
+                                        md:tw-gap-2
+                                        lg:tw-gap-6
+                                        tw-mx-auto
+                                    "
+                                >
+                                    <div class="tw-text-center">
+                                        <div class="pl tw-mx-auto"></div>
+                                        <h2
+                                            class="
+                                                tw-py-3
+                                                m-name
+                                                tw-text-1xl
+                                                sm:tw-text-lg
+                                                md:tw-text-1xl
+                                                lg:tw-text-2xl
+                                            "
+                                        >
+                                            Mempelai Wanita :
+                                        </h2>
+                                        <!-- <a href="" class="">@salmanagustian</a>  -->
+                                        <p
+                                            class="
+                                                tw-text-sm
+                                                lg:tw-font-semibold
+                                                tw-font-normal tw-mb-10
+                                            "
+                                        >
+                                            Hi. Ekwan Ahmad, S.h <br />Kel.
+                                            Mowu'u<br />
+                                            Kel. Salilama<br />
+                                            Kel. Hulalata
+                                        </p>
+                                    </div>
+                                    <div class="tw-text-center">
+                                        <div class="pw tw-mx-auto"></div>
+                                        <h2
+                                            class="
+                                                tw-py-3
+                                                m-name
+                                                tw-text-1xl
+                                                sm:tw-text-lg
+                                                md:tw-text-1xl
+                                                lg:tw-text-2xl
+                                            "
+                                        >
+                                            Mempelai Pria :
+                                        </h2>
+                                        <!-- <a href="" class="">@zakhansa</a> -->
+                                        <p
+                                            class="
+                                                tw-text-sm
+                                                lg:tw-font-semibold
+                                                tw-font-normal tw-mb-12
+                                                sm:tw-mb-20
+                                            "
+                                        >
+                                            Sertu Purn. Abd. Manan Doa, (Alm.)
+                                            <br />Kamala Soleman <br />
+                                            Kel. Doa <br />
+                                            Kel. Soleman
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr class="divider" />
+                        </div>
+                    </section>
+                </div>
+            </section>
+            <div class="tw-h-16"></div>
+        </section>
+        <section
+            style="
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                padding: 2rem;
+            "
+        >
+            <h2
+                style="
+                    font-family: Scarlet;
+                    font-size: 2rem;
+                    margin-bottom: 1.5rem;
+                "
+            >
+                Tanpa mengurangi rasa hormat, bagi yang ingin menunjukkan
+                apresiasinya kepada kami, dapat dilakukan melalui
+            </h2>
+
+            <!-- Bank Card -->
+            <div
+                style="
+                    background-color: white;
+                    border-radius: 1rem;
+                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                    padding: 1.5rem;
+                    max-width: 400px; /* Membatasi lebar konten */
+                    width: 100%; /* Menjaga responsivitas */
+                "
+            >
+                <div
+                    style="
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: flex-start;
+                    "
                 >
+                    <div>
+                        <img
+                            src="https://upload.wikimedia.org/wikipedia/commons/9/97/Logo_BRI.png"
+                            alt="Bank BRI Logo"
+                            style="
+                                margin-bottom: 1rem;
+                                width: 80px;
+                                height: auto;
+                            "
+                        />
 
-                <!-- gifts -->
-                <div id="modal-center" class="uk-flex-top uk-modal" uk-modal="">
-                    <div
-                        class="
-                            uk-modal-dialog
-                            uk-modal-body
-                            uk-margin-auto-vertical
-                        "
-                        style="color: #333"
-                    >
-                        <button
-                            class="uk-modal-close-default uk-icon uk-close"
-                            type="button"
-                            uk-close=""
-                        ></button>
-                        <p class="uk-text-center tw-mb-5">
-                            Scan untuk memberikan kebahagian kepada Pengantin.
-                        </p>
-                        <ul uk-accordion="" class="uk-accordion">
-                            <li class="uk-open">
-                                <a class="uk-accordion-title" href="#">OVO</a>
-                                <div class="uk-accordion-content">
-                                    <img
-                                        src="assets/images/gifts/ovo.jpg"
-                                        class="tw-mx-auto tw-h-auto"
-                                        width="400"
-                                        alt="OVO QR CODE"
-                                    />
-                                </div>
-                            </li>
-                            <li class="uk-open">
-                                <a class="uk-accordion-title" href="#">BCA</a>
-                                <div class="uk-accordion-content">
-                                    <img
-                                        src="assets/images/gifts/bca.jpg"
-                                        class="tw-mx-auto tw-h-auto"
-                                        width="400"
-                                        alt="BCA QR CODE"
-                                    />
-                                </div>
-                            </li>
-                        </ul>
+                        <div style="margin-top: 1rem">
+                            <div
+                                style="font-size: 1.125rem; font-weight: 500"
+                                class="tw-font-extrabold tw-text-black"
+                            >
+                                0027 0110 4460 500
+                            </div>
+                            <div
+                                style="font-size: 0.875rem; color: #666"
+                                class="tw-font-extrabold tw-text-black"
+                            >
+                                Cicit Irmawan
+                            </div>
+                        </div>
                     </div>
                 </div>
-
-                <FormGuestBook v-on:completed="addComment"></FormGuestBook>
-            </section>
-
-            <div class="tw-h-16"></div>
-
-            <div id="guest_comment" class="uk-container uk-container-small">
-                <Comment
-                    data-aos="slide-up"
-                    data-aos-offset="100"
-                    data-aos-easing="ease-out-back"
-                    v-for="(comment, index) in comments"
-                    v-bind:comment="comment"
-                    v-bind:key="index"
-                ></Comment>
-
-                <infinite-loading
-                    spinner="spiral"
-                    @distance="1"
-                    @disabled="busy"
-                    @infinite="loadMore"
-                >
-                    <div slot="no-more"></div>
-                    <div slot="no-results">No results message</div>
-                </infinite-loading>
             </div>
         </section>
 
@@ -140,7 +207,7 @@
                 text-thelast
             "
         >
-            - 'the last good man'
+            - 'Wassalamualaikum Warrahmatullahi Wabarakatuh'
         </p>
 
         <hr class="divider-thelast" />
@@ -179,7 +246,7 @@ export default {
         Audio,
         Navbar,
         MusicBox,
-        InfiniteLoading
+        InfiniteLoading,
     },
 
     data() {
@@ -191,11 +258,9 @@ export default {
     },
 
     mounted() {
+        let prevScrollpos = window.pageYOffset;
 
-         let prevScrollpos = window.pageYOffset;
-
-         window.onscroll = () => {
-             
+        window.onscroll = () => {
             const currentScrollPos = window.pageYOffset;
 
             if (prevScrollpos > currentScrollPos) {
@@ -205,12 +270,14 @@ export default {
             }
             prevScrollpos = currentScrollPos;
 
-            let bottomOfWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight;
+            let bottomOfWindow =
+                document.documentElement.scrollTop + window.innerHeight ===
+                document.documentElement.offsetHeight;
 
             if (bottomOfWindow) {
                 this.loadMore();
             }
-        }
+        };
     },
 
     methods: {
@@ -220,7 +287,7 @@ export default {
             axios
                 .get("comments?page=" + this.page)
                 .then(({ data }) => {
-                    const listComments =  data.data;
+                    const listComments = data.data;
                     if (listComments.length) {
                         this.page += 1;
                         this.comments.push(...listComments);
