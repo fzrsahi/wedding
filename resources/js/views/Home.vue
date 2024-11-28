@@ -86,8 +86,8 @@
                                                 tw-font-normal tw-mb-10
                                             "
                                         >
-                                            Hi. Ekwan Ahmad, S.h <br />Kel.
-                                            Mowu'u<br />
+                                            Hi. Ekwan Ahmad, S.h
+                                            <br />Kel. Sahi<br />Kel. Mowu'u<br />
                                             Kel. Salilama<br />
                                             Kel. Hulalata
                                         </p>

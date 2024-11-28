@@ -21,7 +21,7 @@
                         uk-grid uk-countdown uk-scrollspy-inview
                     "
                     uk-grid
-                    uk-countdown="date: 2024-12-07T11:00:00+07:00"
+                    uk-countdown="date: 2024-12-12T08:00:00+07:00"
                 >
                     <div>
                         <div
@@ -300,7 +300,7 @@
                                             margin: 8px 0 0px 0;
                                         "
                                     >
-                                        Jl. Manggus Molosipat W, Kec. Kota
+                                        Jl. Manggis Molosipat W, Kec. Kota
                                         Barat, Kota Gorontalo, Gorontalo
                                     </p>
 

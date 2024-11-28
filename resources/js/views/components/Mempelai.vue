@@ -127,7 +127,7 @@
                                     sm:tw-mb-20
                                 "
                             >
-                                Putra Pertama dari Bpk Said Haij Umar. <br />&
+                                Putra Pertama dari Bpk Said Haji Umar. <br />&
                                 Ibu Muzna A. Manan
                             </p>
                         </div>

@@ -7,7 +7,7 @@ services:
     container_name: wedding-app
     networks:
       - wedding
-      - db_postgres
+      # - db_postgres
 
   nginx:
     build:
@@ -24,7 +24,7 @@ services:
 networks:
   wedding:
     driver: bridge
-  db_postgres:
-    external: true
+  # db_postgres:
+  #   external: true
   shared-network:
     external: true
